@@ -1,0 +1,300 @@
+:root {
+      --primary-color: #0d6efd;
+      --secondary-color: #0d6efd;
+      --accent-color: #0d6efd;
+      --light-color: #ecf0f1;
+      --dark-color: #2c3e50;
+      --success-color: #0d6efd; /* Changed from green */
+      --warning-color: #0d6efd;
+      --info-color: #0d6efd;
+    }
+    
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f5f7fa;
+      color: #333;
+    }
+    
+    /* Sidebar Styles */
+    .sidebar {
+      background: var(--primary-color);
+      min-height: 100vh;
+      color: white;
+      transition: all 0.3s;
+    }
+    
+    .sidebar .logo {
+      padding: 20px 15px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .sidebar .nav-link {
+      color: rgba(255, 255, 255, 0.7);
+      padding: 12px 20px;
+      margin: 4px 0;
+      border-radius: 5px;
+      transition: all 0.3s;
+    }
+    
+    .sidebar .nav-link:hover,
+    .sidebar .nav-link.active {
+      background-color: rgba(255, 255, 255, 0.1);
+      color: white;
+    }
+    
+    .sidebar .nav-link i {
+      margin-right: 10px;
+      width: 20px;
+      text-align: center;
+    }
+    
+    .sidebar .department-item {
+      padding-left: 40px;
+    }
+    
+    /* Main Content Styles */
+    .main-content {
+      padding: 20px;
+    }
+    
+    .page-title {
+      font-weight: 600;
+      margin-bottom: 25px;
+      color: var(--dark-color);
+    }
+    
+    /* Card Styles */
+    .dashboard-card {
+      border-radius: 10px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+      transition: transform 0.3s;
+      height: 100%;
+      border: none;
+    }
+    
+    .dashboard-card:hover {
+      transform: translateY(-5px);
+    }
+    
+    .card-icon {
+      width: 50px;
+      height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 10px;
+      font-size: 24px;
+      margin-bottom: 15px;
+      background-color: #0d6efd !important; /* Changed from green */
+      color: white !important;
+    }
+    
+    .stat-card {
+      border-left: 5px solid;
+      padding: 15px;
+    }
+    
+    .stat-card.primary {
+      border-left-color: var(--primary-color);
+    }
+    
+    .stat-card.success {
+      border-left-color: var(--success-color);
+    }
+    
+    .stat-card.warning {
+      border-left-color: var(--warning-color);
+    }
+    
+    .stat-card.info {
+      border-left-color: var(--info-color);
+    }
+    
+    /* Chart Containers */
+    .chart-container {
+      position: relative;
+      height: 300px;
+      width: 100%;
+    }
+    
+    /* Department Section Styles */
+    .department-section {
+      padding: 20px;
+      margin-bottom: 30px;
+      border-radius: 10px;
+      background-color: white;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    }
+    
+    .department-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #eee;
+    }
+    
+    .department-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--primary-color);
+    }
+    
+    .sub-department-card {
+      border-radius: 8px;
+      padding: 15px;
+      margin-bottom: 15px;
+      background-color: #f8f9fa;
+      border-left: 4px solid var(--primary-color);
+      transition: all 0.3s;
+    }
+    
+    .sub-department-card:hover {
+      background-color: #e9ecef;
+      transform: translateX(5px);
+    }
+    
+    /* Table Styles */
+    .custom-table {
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    }
+    
+    .custom-table thead {
+      background-color: var(--primary-color);
+      color: white;
+    }
+    
+    /* Progress Bar Styles */
+    .progress {
+      height: 10px;
+      border-radius: 5px;
+      background-color: #d6e4ff !important; /* Light blue */
+    }
+    
+    .progress-bar {
+      background-color: #0d6efd !important; /* Changed from green */
+    }
+    
+    /* Notification Styles */
+    .notification-item {
+      padding: 15px;
+      border-bottom: 1px solid #eee;
+      transition: background-color 0.3s;
+    }
+    
+    .notification-item:hover {
+      background-color: #f8f9fa;
+    }
+    
+    .notification-time {
+      font-size: 0.8rem;
+      color: #6c757d;
+    }
+    
+    /* Profile Dropdown */
+    .profile-dropdown {
+      cursor: pointer;
+    }
+    
+    .profile-dropdown img {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+    
+    /* Mobile Responsiveness */
+    @media (max-width: 768px) {
+      .sidebar {
+        position: fixed;
+        top: 0;
+        left: -250px;
+        width: 250px;
+        z-index: 1000;
+        transition: left 0.3s;
+      }
+    
+      .sidebar.active {
+        left: 0;
+      }
+    
+      .main-content {
+        margin-left: 0 !important;
+      }
+    
+      .toggle-sidebar {
+        display: block !important;
+      }
+    }
+    
+    /* Toggle Button */
+    .toggle-sidebar {
+      display: none;
+      position: fixed;
+      top: 15px;
+      left: 15px;
+      z-index: 1001;
+      background-color: var(--primary-color);
+      color: white;
+      border: none;
+      border-radius: 5px;
+      padding: 8px 12px;
+    }
+    
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    
+    ::-webkit-scrollbar-track {
+      background: #f1f1f1;
+    }
+    
+    ::-webkit-scrollbar-thumb {
+      background: #888;
+      border-radius: 10px;
+    }
+    
+    ::-webkit-scrollbar-thumb:hover {
+      background: #555;
+    }
+    
+    /* Animation */
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+    
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    .fade-in {
+      animation: fadeIn 0.5s ease-out forwards;
+    }
+    
+    /* Department Colors */
+    .labour-dept,
+    .skill-dept,
+    .employment-dept,
+    .industrial-dept,
+    .factories-dept {
+      border-left-color: #0d6efd !important; /* Changed from green */
+    }
+    
+    /* Modal Styles */
+    .custom-modal .modal-header {
+      background-color: var(--primary-color);
+      color: white;
+      border-radius: 10px 10px 0 0;
+    }
+    
+    .custom-modal .modal-footer {
+      border-top: none;
+    }

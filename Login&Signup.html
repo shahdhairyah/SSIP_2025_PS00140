@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Elegant Login & Signup</title>
+  <link rel="stylesheet" href="style_L_S.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/css/intlTelInput.css">
+</head>
+<body>
+  <div class="container">
+    <div class="form-container">
+      <div class="tab-container">
+        <button class="tab-link active" data-tab="login-section">Login</button>
+        <button class="tab-link" data-tab="signup-section">Sign Up</button>
+      </div>
+      
+      <div class="form-wrapper">
+        <!-- Login Form -->
+        <div id="login-section" class="form-section active">
+          <h2>Welcome Back</h2>
+          <form id="login-form" action="login.php" method="POST">
+            <div class="input-container">
+              <label for="login-email">Email</label>
+              <div class="input-wrapper">
+                <span class="icon">📧</span>
+                <input type="email" id="login-email" placeholder="Enter your email"name="login-email"required>
+              </div>
+              <span class="error-message" id="login-email-error"></span>
+            </div>
+            
+            <div class="input-container">
+              <label for="login-department">Department</label>
+              <div class="select-wrapper">
+                <select id="login-department"name="login-department" required>
+                  <option value="">--Select Department--</option>
+                  <option value="skill">Skill Development</option>
+                  <option value="employee">Employment Department</option>
+                  <option value="labour">Labour Department</option>
+                </select>
+              </div>
+              <span class="error-message" id="login-department-error"></span>
+            </div>
+            
+            <div class="input-container">
+              <label for="login-password">Password</label>
+              <div class="password-wrapper">
+                <span class="icon">🔒</span>
+                <input type="password" id="login-password" placeholder="Enter your password" name="login-password" required>
+                <button type="button" class="toggle-password" data-for="login-password">
+                  <span class="toggle-icon">👁️</span>
+                </button>
+              </div>
+              <span class="error-message" id="login-password-error"></span>
+            </div>
+            
+            <div class="form-footer">
+              <div class="remember-me">
+                <input type="checkbox" id="remember-me">
+                <label for="remember-me">Remember me</label>
+              </div>
+              <a href="#" class="forgot-password">Forgot Password?</a>
+            </div>
+            
+            <div class="captcha-container">
+              <div class="captcha" id="login-captcha"></div>
+              <button type="button" class="refresh-captcha" id="refresh-login-captcha">🔄</button>
+              <input type="text" id="login-captcha-input" placeholder="Enter CAPTCHA" required>
+              <span class="error-message" id="login-captcha-error"></span>
+            </div>
+            
+            <div class="message-container">
+              <div class="error-message" id="login-error"></div>
+              <div class="success-message" id="login-success"></div>
+            </div>
+            
+            <button type="submit" class="form-button">Login</button>
+          </form>
+          <p class="switch-form">Don't have an account? <a href="#" data-switch="signup-section">Create a new account</a></p>
+        </div>
+        
+        <!-- Signup Form -->
+        <div id="signup-section" class="form-section">
+          <h2>Create Account</h2>
+          <form action="signup.php" method="POST">
+            <div class="input-container">
+              <label for="fullname">Full Name</label>
+              <div class="input-wrapper">
+                <span class="icon">👤</span>
+                <input type="text" id="fullname" placeholder="Your Name"name="fullname" required>
+              </div>
+              <span class="error-message" id="fullname-error"></span>
+            </div>
+            
+            <div class="input-container">
+              <label for="phone">Phone Number</label>
+              <div class="input-wrapper">
+                <span class="icon">📱</span>
+                <input type="tel" id="phone" placeholder="(123) 456-7890" name="phone"required>
+              </div>
+              <span class="error-message" id="phone-error"></span>
+            </div>
+            
+            <div class="input-container">
+              <label for="email">Email</label>
+              <div class="input-wrapper">
+                <span class="icon">📧</span>
+                <input type="email" id="email" placeholder="your.email@example.com"name="email" required>
+              </div>
+              <span class="error-message" id="email-error"></span>
+            </div>
+            
+            <div class="input-container">
+              <label for="department">Department</label>
+              <div class="select-wrapper">
+                <select id="department"name="department" required>
+                    <option value="">--Select Department--</option>
+                    <option value="skill">Skill Development</option>
+                    <option value="employee">Employment Department</option>
+                    <option value="labour">Labour Department</option>
+                </select>
+              </div>
+              <span class="error-message" id="department-error"></span>
+            </div>
+            
+            <div class="input-container">
+              <label for="password">Password</label>
+              <div class="password-wrapper">
+                <span class="icon">🔒</span>
+                <input type="password" id="password" placeholder="Create a strong password"name="password" required>
+                <button type="button" class="toggle-password" data-for="password">
+                  <span class="toggle-icon">👁️</span>
+                </button>
+              </div>
+              <div class="strength-meter">
+                <div class="strength-bar" id="strength-bar"></div>
+              </div>
+              <p id="strength-text" class="strength-text"></p>
+              <span class="error-message" id="password-error"></span>
+            </div>
+            
+            <div class="input-container">
+              <label for="confirm-password">Confirm Password</label>
+              <div class="password-wrapper">
+                <span class="icon">🔒</span>
+                <input type="password" id="confirm-password" placeholder="Re-enter your password" name="confirmpassword"required>
+                <button type="button" class="toggle-password" data-for="confirm-password">
+                  <span class="toggle-icon">👁️</span>
+                </button>
+              </div>
+              <p id="password-match-text" class="match-text"></p>
+              <span class="error-message" id="confirm-password-error"></span>
+            </div>
+            
+            <div class="terms-container">
+              <input type="checkbox" id="terms-agree" required>
+              <label for="terms-agree">I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a></label>
+              <span class="error-message" id="terms-error"></span>
+            </div>
+            
+            <div class="captcha-container">
+              <div class="captcha" id="signup-captcha"></div>
+              <button type="button" class="refresh-captcha" id="refresh-signup-captcha">🔄</button>
+              <input type="text" id="signup-captcha-input" placeholder="Enter CAPTCHA" required>
+              <span class="error-message" id="signup-captcha-error"></span>
+            </div>
+            
+            <div class="message-container">
+              <div class="error-message" id="signup-error"></div>
+              <div class="success-message" id="signup-success"></div>
+            </div>
+            
+            <button type="submit" class="form-button">Create Account</button>
+          </form>
+          <p class="switch-form">Already have an account? <a href="#" data-switch="login-section">Login here</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/intlTelInput.min.js"></script>
+  <script src="script_L_S.js"></script>
+</body>
+</html>

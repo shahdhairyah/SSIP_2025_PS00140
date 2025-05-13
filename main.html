@@ -1,0 +1,2115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Labour, Skill Development and Employment Department Dashboard</title>
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style src="style.css"></style>
+  <style>
+    :root {
+      --primary-color: #2c3e50;
+      --secondary-color: #3498db;
+      --accent-color: #e74c3c;
+      --light-color: #ecf0f1;
+      --dark-color: #2c3e50;
+      --success-color: #27ae60;
+      --warning-color: #f39c12;
+      --info-color: #3498db;
+    }
+    
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f5f7fa;
+      color: #333;
+    }
+    
+    /* Sidebar Styles */
+    .sidebar {
+      background: var(--primary-color);
+      min-height: 100vh;
+      color: white;
+      transition: all 0.3s;
+    }
+    
+    .sidebar .logo {
+      padding: 20px 15px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .sidebar .nav-link {
+      color: rgba(255, 255, 255, 0.7);
+      padding: 12px 20px;
+      margin: 4px 0;
+      border-radius: 5px;
+      transition: all 0.3s;
+    }
+    
+    .sidebar .nav-link:hover, 
+    .sidebar .nav-link.active {
+      background-color: rgba(255, 255, 255, 0.1);
+      color: white;
+    }
+    
+    .sidebar .nav-link i {
+      margin-right: 10px;
+      width: 20px;
+      text-align: center;
+    }
+    
+    .sidebar .department-item {
+      padding-left: 40px;
+    }
+    
+    /* Main Content Styles */
+    .main-content {
+      padding: 20px;
+    }
+    
+    .page-title {
+      font-weight: 600;
+      margin-bottom: 25px;
+      color: var(--dark-color);
+    }
+    
+    /* Card Styles */
+    .dashboard-card {
+      border-radius: 10px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+      transition: transform 0.3s;
+      height: 100%;
+      border: none;
+    }
+    
+    .dashboard-card:hover {
+      transform: translateY(-5px);
+    }
+    
+    .card-icon {
+      width: 50px;
+      height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 10px;
+      font-size: 24px;
+      margin-bottom: 15px;
+    }
+    
+    .stat-card {
+      border-left: 5px solid;
+      padding: 15px;
+    }
+    
+    .stat-card.primary {
+      border-left-color: var(--primary-color);
+    }
+    
+    .stat-card.success {
+      border-left-color: var(--success-color);
+    }
+    
+    .stat-card.warning {
+      border-left-color: var(--warning-color);
+    }
+    
+    .stat-card.info {
+      border-left-color: var(--info-color);
+    }
+    
+    /* Chart Containers */
+    .chart-container {
+      position: relative;
+      height: 300px;
+      width: 100%;
+    }
+    
+    /* Department Section Styles */
+    .department-section {
+      padding: 20px;
+      margin-bottom: 30px;
+      border-radius: 10px;
+      background-color: white;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    }
+    
+    .department-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #eee;
+    }
+    
+    .department-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--primary-color);
+    }
+    
+    .sub-department-card {
+      border-radius: 8px;
+      padding: 15px;
+      margin-bottom: 15px;
+      background-color: #f8f9fa;
+      border-left: 4px solid var(--secondary-color);
+      transition: all 0.3s;
+    }
+    
+    .sub-department-card:hover {
+      background-color: #e9ecef;
+      transform: translateX(5px);
+    }
+    
+    /* Table Styles */
+    .custom-table {
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    }
+    
+    .custom-table thead {
+      background-color: var(--primary-color);
+      color: white;
+    }
+    
+    /* Progress Bar Styles */
+    .progress {
+      height: 10px;
+      border-radius: 5px;
+    }
+    
+    /* Notification Styles */
+    .notification-item {
+      padding: 15px;
+      border-bottom: 1px solid #eee;
+      transition: background-color 0.3s;
+    }
+    
+    .notification-item:hover {
+      background-color: #f8f9fa;
+    }
+    
+    .notification-time {
+      font-size: 0.8rem;
+      color: #6c757d;
+    }
+    
+    /* Profile Dropdown */
+    .profile-dropdown {
+      cursor: pointer;
+    }
+    
+    .profile-dropdown img {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+    
+    /* Mobile Responsiveness */
+    @media (max-width: 768px) {
+      .sidebar {
+        position: fixed;
+        top: 0;
+        left: -250px;
+        width: 250px;
+        z-index: 1000;
+        transition: left 0.3s;
+      }
+      
+      .sidebar.active {
+        left: 0;
+      }
+      
+      .main-content {
+        margin-left: 0 !important;
+      }
+      
+      .toggle-sidebar {
+        display: block !important;
+      }
+    }
+    
+    /* Toggle Button */
+    .toggle-sidebar {
+      display: none;
+      position: fixed;
+      top: 15px;
+      left: 15px;
+      z-index: 1001;
+      background-color: var(--primary-color);
+      color: white;
+      border: none;
+      border-radius: 5px;
+      padding: 8px 12px;
+    }
+    
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    
+    ::-webkit-scrollbar-track {
+      background: #f1f1f1;
+    }
+    
+    ::-webkit-scrollbar-thumb {
+      background: #888;
+      border-radius: 10px;
+    }
+    
+    ::-webkit-scrollbar-thumb:hover {
+      background: #555;
+    }
+    
+    /* Animation */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .fade-in {
+      animation: fadeIn 0.5s ease-out forwards;
+    }
+    
+    /* Department Colors */
+    .labour-dept {
+      border-left-color: #3498db !important;
+    }
+    
+    .skill-dept {
+      border-left-color: #2ecc71 !important;
+    }
+    
+    .employment-dept {
+      border-left-color: #e74c3c !important;
+    }
+    
+    .industrial-dept {
+      border-left-color: #f39c12 !important;
+    }
+    
+    .factories-dept {
+      border-left-color: #9b59b6 !important;
+    }
+    
+    /* Modal Styles */
+    .custom-modal .modal-header {
+      background-color: var(--primary-color);
+      color: white;
+      border-radius: 10px 10px 0 0;
+    }
+    
+    .custom-modal .modal-footer {
+      border-top: none;
+    }
+  </style>
+</head>
+<body>
+  <!-- Toggle Sidebar Button (Mobile) -->
+  <button class="toggle-sidebar" id="toggleSidebar">
+    <i class="bi bi-list"></i>
+  </button>
+
+  <div class="container-fluid">
+    <div class="row">
+      <!-- Sidebar -->
+      <div class="col-lg-2 col-md-3 p-0 sidebar" id="sidebar">
+        <div class="logo d-flex align-items-center">
+          <i class="bi bi-building me-2 fs-4"></i>
+          <h5 class="mb-0">Labour & Skills</h5>
+        </div>
+        <div class="mt-4">
+          <ul class="nav flex-column">
+            
+            <li class="nav-item">
+              <a href="#departments" class="nav-link" data-section="departments">
+                <i class="bi bi-diagram-3"></i> Departments
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="#" class="nav-link" data-bs-toggle="collapse" data-bs-target="#deptSubmenu">
+                <i class="bi bi-building"></i> HODs
+                <i class="bi bi-chevron-down float-end"></i>
+              </a>
+              <div class="collapse" id="deptSubmenu">
+                <ul class="nav flex-column">
+                  <li class="nav-item">
+                    <a href="#labour" class="nav-link department-item" data-section="labour">
+                      Labour
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="#skill" class="nav-link department-item" data-section="skill">
+                      Skill Development
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="#employment" class="nav-link department-item" data-section="employment">
+                      Employment
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="#industrial" class="nav-link department-item" data-section="industrial">
+                      Industrial Relations
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="#factories" class="nav-link department-item" data-section="factories">
+                      Factories & Boilers
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </li>
+            <li class="nav-item">
+              <a href="#projects" class="nav-link" data-section="projects">
+                <i class="bi bi-kanban"></i> Projects
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="#reports" class="nav-link" data-section="reports">
+                <i class="bi bi-file-earmark-text"></i> Reports
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="#notifications" class="nav-link" data-section="notifications">
+                <i class="bi bi-bell"></i> Notifications
+                <span class="badge bg-danger rounded-pill float-end">5</span>
+              </a>
+            </li>
+            <!-- <li class="nav-item">
+              <a href="#settings" class="nav-link" data-section="settings">
+                <i class="bi bi-gear"></i> Settings
+              </a>
+            </li> -->
+          </ul>
+        </div>
+      </div>
+
+      <!-- Main Content -->
+      <div class="col-lg-10 col-md-9 ms-auto main-content">
+        <!-- Top Navigation -->
+        <div class="row mb-4">
+          <div class="col-12">
+            <nav class="navbar navbar-expand-lg navbar-light bg-white rounded shadow-sm">
+              <div class="container-fluid">
+                <form class="d-flex me-auto">
+                  
+                </form>
+                <ul class="navbar-nav ms-auto">
+                  <li class="nav-item dropdown me-3">
+                    <a class="nav-link" href="#" role="button" data-bs-toggle="dropdown">
+                      <i class="bi bi-bell fs-5 position-relative">
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                          5
+                        </span>
+                      </i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                      <li><h6 class="dropdown-header">Notifications</h6></li>
+                      <li><hr class="dropdown-divider"></li>
+                      <li><a class="dropdown-item" href="#">New report from Labour Department</a></li>
+                      <li><a class="dropdown-item" href="#">Skill Development meeting scheduled</a></li><br>
+                      <li><br><a class="dropdown-item" href="#">Employment statistics updated</a></li>
+                      <li><a class="dropdown-item" href="#">New policy document uploaded</a></li>
+                      <li><a class="dropdown-item" href="#">System maintenance scheduled</a></li>
+                    </ul>
+                  </li>
+                  <li class="nav-item dropdown">
+                    <a class="nav-link profile-dropdown d-flex align-items-center" href="#" role="button" data-bs-toggle="dropdown">
+                      <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Profile">
+                      <span class="ms-2 d-none d-lg-inline">Admin User</span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                      <li><a class="dropdown-item" href="#"><i class="bi bi-person me-2"></i>Profile</a></li>
+                      <li><a class="dropdown-item" href="#"><i class="bi bi-gear me-2"></i>Settings</a></li>
+                      <li><hr class="dropdown-divider"></li>
+                      <li><a class="dropdown-item" href="#"><i class="bi bi-box-arrow-right me-2"></i>Logout</a></li>
+                    </ul>
+                  </li>
+                </ul>
+              </div>
+            </nav>
+          </div>
+        </div>
+
+        <!-- Content Sections -->
+        <div id="content-sections">
+          <!-- Dashboard Section -->
+          <section id="dashboard-section" class="content-section active fade-in">
+            <h2 class="page-title">Department Dashboard</h2>
+            
+            <!-- Stats Cards -->
+            
+              
+              
+              
+              
+            </div>
+            
+            <!-- Charts Row -->
+            <div class="row mb-4">
+              <div class="col-lg-8 mb-4">
+                <div class="card dashboard-card">
+                  <div class="card-header bg-white">
+                    <h5 class="card-title mb-0">Department Performance</h5>
+                  </div>
+                  <div class="card-body">
+                    <div class="chart-container">
+                      <canvas id="departmentPerformanceChart"></canvas>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="col-lg-4 mb-4">
+                <div class="card dashboard-card">
+                  <div class="card-header bg-white">
+                    <h5 class="card-title mb-0">Budget Allocation</h5>
+                  </div>
+                  <div class="card-body">
+                    <div class="chart-container">
+                      <canvas id="budgetAllocationChart"></canvas>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Recent Activities & Project Status -->
+            <div class="row">
+              <div class="col-lg-6 mb-4">
+                <div class="card dashboard-card">
+                  <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                    <h5 class="card-title mb-0">Recent Activities</h5>
+                    <button class="btn btn-sm btn-outline-primary">View All</button>
+                  </div>
+                  <div class="card-body p-0">
+                    <div class="list-group list-group-flush">
+                      <div class="list-group-item border-0 py-3">
+                        <div class="d-flex">
+                          <div class="flex-shrink-0">
+                            <div class="bg-primary bg-opacity-10 text-primary rounded-circle p-2">
+                              <i class="bi bi-file-earmark-text"></i>
+                            </div>
+                          </div>
+                          <div class="ms-3">
+                            <h6 class="mb-1">New policy document uploaded</h6>
+                            <p class="text-muted mb-0">Labour Department • 2 hours ago</p>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="list-group-item border-0 py-3">
+                        <div class="d-flex">
+                          <div class="flex-shrink-0">
+                            <div class="bg-success bg-opacity-10 text-success rounded-circle p-2">
+                              <i class="bi bi-calendar-event"></i>
+                            </div>
+                          </div>
+                          <div class="ms-3">
+                            <h6 class="mb-1">Quarterly review meeting scheduled</h6>
+                            <p class="text-muted mb-0">Skill Development • Yesterday</p>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="list-group-item border-0 py-3">
+                        <div class="d-flex">
+                          <div class="flex-shrink-0">
+                            <div class="bg-warning bg-opacity-10 text-warning rounded-circle p-2">
+                              <i class="bi bi-graph-up"></i>
+                            </div>
+                          </div>
+                          <div class="ms-3">
+                            <h6 class="mb-1">Employment statistics updated</h6>
+                            <p class="text-muted mb-0">Employment Department • 2 days ago</p>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="list-group-item border-0 py-3">
+                        <div class="d-flex">
+                          <div class="flex-shrink-0">
+                            <div class="bg-info bg-opacity-10 text-info rounded-circle p-2">
+                              <i class="bi bi-people"></i>
+                            </div>
+                          </div>
+                          <div class="ms-3">
+                            <h6 class="mb-1">New staff onboarding completed</h6>
+                            <p class="text-muted mb-0">Industrial Relations • 3 days ago</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="col-lg-6 mb-4">
+                <div class="card dashboard-card">
+                  <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                    <h5 class="card-title mb-0">Project Status</h5>
+                    <button class="btn btn-sm btn-outline-primary">View All</button>
+                  </div>
+                  <div class="card-body">
+                    <div class="mb-4">
+                      <div class="d-flex justify-content-between mb-1">
+                        <span>Skill Development Portal</span>
+                        <span>75%</span>
+                      </div>
+                      <div class="progress">
+                        <div class="progress-bar bg-success" role="progressbar" style="width: 75%" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
+                      </div>
+                    </div>
+                    <div class="mb-4">
+                      <div class="d-flex justify-content-between mb-1">
+                        <span>Labour Welfare Initiative</span>
+                        <span>45%</span>
+                      </div>
+                      <div class="progress">
+                        <div class="progress-bar bg-warning" role="progressbar" style="width: 45%" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100"></div>
+                      </div>
+                    </div>
+                    <div class="mb-4">
+                      <div class="d-flex justify-content-between mb-1">
+                        <span>Employment Database Migration</span>
+                        <span>90%</span>
+                      </div>
+                      <div class="progress">
+                        <div class="progress-bar bg-info" role="progressbar" style="width: 90%" aria-valuenow="90" aria-valuemin="0" aria-valuemax="100"></div>
+                      </div>
+                    </div>
+                    <div>
+                      <div class="d-flex justify-content-between mb-1">
+                        <span>Factory Safety Compliance</span>
+                        <span>30%</span>
+                      </div>
+                      <div class="progress">
+                        <div class="progress-bar bg-danger" role="progressbar" style="width: 30%" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+          
+          <!-- Departments Section -->
+          <section id="departments-section" class="content-section">
+            <h2 class="page-title">Department Structure</h2>
+            
+            <div class="row">
+              <div class="col-12 mb-4">
+                <div class="card dashboard-card">
+                  <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                      <h5 class="card-title mb-0">Organizational Structure</h5>
+                      <div>
+                        <button class="btn btn-sm btn-outline-primary me-2">
+                          <i class="bi bi-download me-1"></i> Export
+                        </button>
+                        <button class="btn btn-sm btn-primary">
+                          <i class="bi bi-plus me-1"></i> Add Department
+                        </button>
+                      </div>
+                    </div>
+                    
+                    <!-- Department Structure -->
+                    <div class="department-section">
+                      <div class="department-header">
+                        <h3 class="department-title">Labour Department</h3>
+                        <span class="badge bg-primary">12 Sub-departments</span>
+                      </div>
+                      <div class="row">
+                        <div class="col-md-4 mb-3">
+                          <div class="sub-department-card labour-dept">
+                            <h5>Labour Welfare</h5>
+                            <p class="mb-0 text-muted">Manages welfare schemes for laborers</p>
+                          </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                          <div class="sub-department-card labour-dept">
+                            <h5>Labour Enforcement</h5>
+                            <p class="mb-0 text-muted">Ensures compliance with labour laws</p>
+                          </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                          <div class="sub-department-card labour-dept">
+                            <h5>Labour Statistics</h5>
+                            <p class="mb-0 text-muted">Collects and analyzes labour data</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div class="department-section">
+                      <div class="department-header">
+                        <h3 class="department-title">Skill Development Department</h3>
+                        <span class="badge bg-success">8 Sub-departments</span>
+                      </div>
+                      <div class="row">
+                        <div class="col-md-4 mb-3">
+                          <div class="sub-department-card skill-dept">
+                            <h5>Training Programs</h5>
+                            <p class="mb-0 text-muted">Manages vocational training initiatives</p>
+                          </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                          <div class="sub-department-card skill-dept">
+                            <h5>Certification</h5>
+                            <p class="mb-0 text-muted">Handles skill certification processes</p>
+                          </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                          <div class="sub-department-card skill-dept">
+                            <h5>Industry Partnerships</h5>
+                            <p class="mb-0 text-muted">Coordinates with industry for skill needs</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div class="department-section">
+                      <div class="department-header">
+                        <h3 class="department-title">Employment Department</h3>
+                        <span class="badge bg-danger">10 Sub-departments</span>
+                      </div>
+                      <div class="row">
+                        <div class="col-md-4 mb-3">
+                          <div class="sub-department-card employment-dept">
+                            <h5>Job Placement</h5>
+                            <p class="mb-0 text-muted">Facilitates employment opportunities</p>
+                          </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                          <div class="sub-department-card employment-dept">
+                            <h5>Career Counseling</h5>
+                            <p class="mb-0 text-muted">Provides guidance on career paths</p>
+                          </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                          <div class="sub-department-card employment-dept">
+                            <h5>Employment Exchanges</h5>
+                            <p class="mb-0 text-muted">Manages employment registration centers</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div class="department-section">
+                      <div class="department-header">
+                        <h3 class="department-title">Industrial Relations Department</h3>
+                        <span class="badge bg-warning">6 Sub-departments</span>
+                      </div>
+                      <div class="row">
+                        <div class="col-md-4 mb-3">
+                          <div class="sub-department-card industrial-dept">
+                            <h5>Dispute Resolution</h5>
+                            <p class="mb-0 text-muted">Handles industrial disputes</p>
+                          </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                          <div class="sub-department-card industrial-dept">
+                            <h5>Trade Unions</h5>
+                            <p class="mb-0 text-muted">Manages trade union registrations</p>
+                          </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                          <div class="sub-department-card industrial-dept">
+                            <h5>Collective Bargaining</h5>
+                            <p class="mb-0 text-muted">Facilitates employer-employee negotiations</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div class="department-section">
+                      <div class="department-header">
+                        <h3 class="department-title">Factories & Boilers Department</h3>
+                        <span class="badge bg-info">7 Sub-departments</span>
+                      </div>
+                      <div class="row">
+                        <div class="col-md-4 mb-3">
+                          <div class="sub-department-card factories-dept">
+                            <h5>Factory Inspections</h5>
+                            <p class="mb-0 text-muted">Conducts safety inspections</p>
+                          </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                          <div class="sub-department-card factories-dept">
+                            <h5>Boiler Certification</h5>
+                            <p class="mb-0 text-muted">Issues safety certificates for boilers</p>
+                          </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                          <div class="sub-department-card factories-dept">
+                            <h5>Occupational Health</h5>
+                            <p class="mb-0 text-muted">Monitors workplace health standards</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+          
+          <!-- Labour Department Section -->
+          <section id="labour-section" class="content-section">
+            <h2 class="page-title">Labour Department</h2>
+            
+            <div class="row mb-4">
+              <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card dashboard-card stat-card labour-dept">
+                  <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                      <div>
+                        <h6 class="text-muted">Total Staff</h6>
+                        <h3 class="mb-0">324</h3>
+                      </div>
+                      <div class="card-icon bg-primary bg-opacity-10 text-primary">
+                        <i class="bi bi-people"></i>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card dashboard-card stat-card labour-dept">
+                  <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                      <div>
+                        <h6 class="text-muted">Active Projects</h6>
+                        <h3 class="mb-0">12</h3>
+                      </div>
+                      <div class="card-icon bg-primary bg-opacity-10 text-primary">
+                        <i class="bi bi-kanban"></i>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card dashboard-card stat-card labour-dept">
+                  <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                      <div>
+                        <h6 class="text-muted">Budget Utilized</h6>
+                        <h3 class="mb-0">68%</h3>
+                      </div>
+                      <div class="card-icon bg-primary bg-opacity-10 text-primary">
+                        <i class="bi bi-cash-stack"></i>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card dashboard-card stat-card labour-dept">
+                  <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                      <div>
+                        <h6 class="text-muted">Compliance Rate</h6>
+                        <h3 class="mb-0">92%</h3>
+                      </div>
+                      <div class="card-icon bg-primary bg-opacity-10 text-primary">
+                        <i class="bi bi-check-circle"></i>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="row">
+              <div class="col-lg-8 mb-4">
+                <div class="card dashboard-card">
+                  <div class="card-header bg-white">
+                    <h5 class="card-title mb-0">Labour Welfare Schemes Performance</h5>
+                  </div>
+                  <div class="card-body">
+                    <div class="chart-container">
+                      <canvas id="labourWelfareChart"></canvas>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="col-lg-4 mb-4">
+                <div class="card dashboard-card">
+                  <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                    <h5 class="card-title mb-0">Key Personnel</h5>
+                  </div>
+                  <div class="card-body p-0">
+                    <ul class="list-group list-group-flush">
+                      <li class="list-group-item d-flex align-items-center">
+                        <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" class="rounded-circle me-3" width="40" height="40" alt="">
+                        <div>
+                          <h6 class="mb-0">Dr. Rajesh Kumar</h6>
+                          <small class="text-muted">Labour Commissioner</small>
+                        </div>
+                      </li>
+                      <li class="list-group-item d-flex align-items-center">
+                        <img src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" class="rounded-circle me-3" width="40" height="40" alt="">
+                        <div>
+                          <h6 class="mb-0">Ms. Priya Sharma</h6>
+                          <small class="text-muted">Joint Labour Commissioner</small>
+                        </div>
+                      </li>
+                      <li class="list-group-item d-flex align-items-center">
+                        <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" class="rounded-circle me-3" width="40" height="40" alt="">
+                        <div>
+                          <h6 class="mb-0">Mr. Vikram Singh</h6>
+                          <small class="text-muted">Deputy Labour Commissioner</small>
+                        </div>
+                      </li>
+                      <li class="list-group-item d-flex align-items-center">
+                        <img src="https://images.unsplash.com/photo-1580489944761-15a19d654956?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" class="rounded-circle me-3" width="40" height="40" alt="">
+                        <div>
+                          <h6 class="mb-0">Dr. Anita Desai</h6>
+                          <small class="text-muted">Chief Labour Welfare Officer</small>
+                        </div>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="row">
+              <div class="col-12 mb-4">
+                <div class="card dashboard-card">
+                  <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                    <h5 class="card-title mb-0">Recent Inspections</h5>
+                    <button class="btn btn-sm btn-outline-primary">View All</button>
+                  </div>
+                  <div class="card-body">
+                    <div class="table-responsive">
+                      <table class="table table-hover">
+                        <thead>
+                          <tr>
+                            <th>Inspection ID</th>
+                            <th>Establishment</th>
+                            <th>Date</th>
+                            <th>Inspector</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td>#INS-2025-001</td>
+                            <td>Sunrise Industries Ltd.</td>
+                            <td>15 Apr 2025</td>
+                            <td>Mr. Suresh Patel</td>
+                            <td><span class="badge bg-success">Compliant</span></td>
+                            <td><button class="btn btn-sm btn-outline-primary">View Report</button></td>
+                          </tr>
+                          <tr>
+                            <td>#INS-2025-002</td>
+                            <td>Global Textiles Pvt. Ltd.</td>
+                            <td>12 Apr 2025</td>
+                            <td>Ms. Deepa Gupta</td>
+                            <td><span class="badge bg-warning">Minor Issues</span></td>
+                            <td><button class="btn btn-sm btn-outline-primary">View Report</button></td>
+                          </tr>
+                          <tr>
+                            <td>#INS-2025-003</td>
+                            <td>Tech Solutions Inc.</td>
+                            <td>10 Apr 2025</td>
+                            <td>Mr. Rahul Verma</td>
+                            <td><span class="badge bg-success">Compliant</span></td>
+                            <td><button class="btn btn-sm btn-outline-primary">View Report</button></td>
+                          </tr>
+                          <tr>
+                            <td>#INS-2025-004</td>
+                            <td>Eastern Manufacturing Co.</td>
+                            <td>08 Apr 2025</td>
+                            <td>Ms. Kavita Sharma</td>
+                            <td><span class="badge bg-danger">Non-Compliant</span></td>
+                            <td><button class="btn btn-sm btn-outline-primary">View Report</button></td>
+                          </tr>
+                          <tr>
+                            <td>#INS-2025-005</td>
+                            <td>Horizon Enterprises</td>
+                            <td>05 Apr 2025</td>
+                            <td>Mr. Ajay Kumar</td>
+                            <td><span class="badge bg-success">Compliant</span></td>
+                            <td><button class="btn btn-sm btn-outline-primary">View Report</button></td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+          
+          <!-- Skill Development Section -->
+          <section id="skill-section" class="content-section">
+            <h2 class="page-title">Skill Development Department</h2>
+            
+            <div class="row mb-4">
+              <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card dashboard-card stat-card skill-dept">
+                  <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                      <div>
+                        <h6 class="text-muted">Training Centers</h6>
+                        <h3 class="mb-0">48</h3>
+                      </div>
+                      <div class="card-icon bg-success bg-opacity-10 text-success">
+                        <i class="bi bi-building"></i>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card dashboard-card stat-card skill-dept">
+                  <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                      <div>
+                        <h6 class="text-muted">Active Trainees</h6>
+                        <h3 class="mb-0">12,458</h3>
+                      </div>
+                      <div class="card-icon bg-success bg-opacity-10 text-success">
+                        <i class="bi bi-people"></i>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card dashboard-card stat-card skill-dept">
+                  <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                      <div>
+                        <h6 class="text-muted">Courses Offered</h6>
+                        <h3 class="mb-0">124</h3>
+                      </div>
+                      <div class="card-icon bg-success bg-opacity-10 text-success">
+                        <i class="bi bi-journal-text"></i>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card dashboard-card stat-card skill-dept">
+                  <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                      <div>
+                        <h6 class="text-muted">Placement Rate</h6>
+                        <h3 class="mb-0">78%</h3>
+                      </div>
+                      <div class="card-icon bg-success bg-opacity-10 text-success">
+                        <i class="bi bi-graph-up"></i>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="row">
+              <div class="col-lg-8 mb-4">
+                <div class="card dashboard-card">
+                  <div class="card-header bg-white">
+                    <h5 class="card-title mb-0">Training Program Enrollment</h5>
+                  </div>
+                  <div class="card-body">
+                    <div class="chart-container">
+                      <canvas id="skillEnrollmentChart"></canvas>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="col-lg-4 mb-4">
+                <div class="card dashboard-card">
+                  <div class="card-header bg-white">
+                    <h5 class="card-title mb-0">Top Skills in Demand</h5>
+                  </div>
+                  <div class="card-body">
+                    <div class="mb-3">
+                      <div class="d-flex justify-content-between mb-1">
+                        <span>Data Analytics</span>
+                        <span>85%</span>
+                      </div>
+                      <div class="progress">
+                        <div class="progress-bar bg-success" role="progressbar" style="width: 85%" aria-valuenow="85" aria-valuemin="0" aria-valuemax="100"></div>
+                      </div>
+                    </div>
+                    <div class="mb-3">
+                      <div class="d-flex justify-content-between mb-1">
+                        <span>Digital Marketing</span>
+                        <span>78%</span>
+                      </div>
+                      <div class="progress">
+                        <div class="progress-bar bg-success" role="progressbar" style="width: 78%" aria-valuenow="78" aria-valuemin="0" aria-valuemax="100"></div>
+                      </div>
+                    </div>
+                    <div class="mb-3">
+                      <div class="d-flex justify-content-between mb-1">
+                        <span>Web Development</span>
+                        <span>72%</span>
+                      </div>
+                      <div class="progress">
+                        <div class="progress-bar bg-success" role="progressbar" style="width: 72%" aria-valuenow="72" aria-valuemin="0" aria-valuemax="100"></div>
+                      </div>
+                    </div>
+                    <div class="mb-3">
+                      <div class="d-flex justify-content-between mb-1">
+                        <span>Cloud Computing</span>
+                        <span>68%</span>
+                      </div>
+                      <div class="progress">
+                        <div class="progress-bar bg-success" role="progressbar" style="width: 68%" aria-valuenow="68" aria-valuemin="0" aria-valuemax="100"></div>
+                      </div>
+                    </div>
+                    <div>
+                      <div class="d-flex justify-content-between mb-1">
+                        <span>Machine Learning</span>
+                        <span>65%</span>
+                      </div>
+                      <div class="progress">
+                        <div class="progress-bar bg-success" role="progressbar" style="width: 65%" aria-valuenow="65" aria-valuemin="0" aria-valuemax="100"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="row">
+              <div class="col-12 mb-4">
+                <div class="card dashboard-card">
+                  <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                    <h5 class="card-title mb-0">Upcoming Training Programs</h5>
+                    <button class="btn btn-sm btn-outline-success">Add New Program</button>
+                  </div>
+                  <div class="card-body">
+                    <div class="table-responsive">
+                      <table class="table table-hover">
+                        <thead>
+                          <tr>
+                            <th>Program ID</th>
+                            <th>Program Name</th>
+                            <th>Start Date</th>
+                            <th>Duration</th>
+                            <th>Location</th>
+                            <th>Seats</th>
+                            <th>Status</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td>#TRN-2025-042</td>
+                            <td>Advanced Web Development</td>
+                            <td>20 Apr 2025</td>
+                            <td>3 Months</td>
+                            <td>Central Training Center</td>
+                            <td>40/50</td>
+                            <td><span class="badge bg-warning">Filling Fast</span></td>
+                          </tr>
+                          <tr>
+                            <td>#TRN-2025-043</td>
+                            <td>Digital Marketing Essentials</td>
+                            <td>25 Apr 2025</td>
+                            <td>2 Months</td>
+                            <td>East Zone Institute</td>
+                            <td>35/40</td>
+                            <td><span class="badge bg-success">Open</span></td>
+                          </tr>
+                          <tr>
+                            <td>#TRN-2025-044</td>
+                            <td>Cloud Computing Fundamentals</td>
+                            <td>01 May 2025</td>
+                            <td>3 Months</td>
+                            <td>Tech Training Hub</td>
+                            <td>25/45</td>
+                            <td><span class="badge bg-success">Open</span></td>
+                          </tr>
+                          <tr>
+                            <td>#TRN-2025-045</td>
+                            <td>Data Science Bootcamp</td>
+                            <td>05 May 2025</td>
+                            <td>4 Months</td>
+                            <td>Central Training Center</td>
+                            <td>50/50</td>
+                            <td><span class="badge bg-danger">Filled</span></td>
+                          </tr>
+                          <tr>
+                            <td>#TRN-2025-046</td>
+                            <td>Mobile App Development</td>
+                            <td>10 May 2025</td>
+                            <td>3 Months</td>
+                            <td>West Zone Institute</td>
+                            <td>20/40</td>
+                            <td><span class="badge bg-success">Open</span></td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+          
+          <!-- Employment Section -->
+          <section id="employment-section" class="content-section">
+            <h2 class="page-title">Employment Department</h2>
+            
+            <div class="row mb-4">
+              <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card dashboard-card stat-card employment-dept">
+                  <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                      <div>
+                        <h6 class="text-muted">Job Seekers</h6>
+                        <h3 class="mb-0">45,782</h3>
+                      </div>
+                      <div class="card-icon bg-danger bg-opacity-10 text-danger">
+                        <i class="bi bi-person-badge"></i>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card dashboard-card stat-card employment-dept">
+                  <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                      <div>
+                        <h6 class="text-muted">Vacancies Listed</h6>
+                        <h3 class="mb-0">2,845</h3>
+                      </div>
+                      <div class="card-icon bg-danger bg-opacity-10 text-danger">
+                        <i class="bi bi-briefcase"></i>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card dashboard-card stat-card employment-dept">
+                  <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                      <div>
+                        <h6 class="text-muted">Placements (YTD)</h6>
+                        <h3 class="mb-0">12,458</h3>
+                      </div>
+                      <div class="card-icon bg-danger bg-opacity-10 text-danger">
+                        <i class="bi bi-check2-circle"></i>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card dashboard-card stat-card employment-dept">
+                  <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                      <div>
+                        <h6 class="text-muted">Employment Exchanges</h6>
+                        <h3 class="mb-0">32</h3>
+                      </div>
+                      <div class="card-icon bg-danger bg-opacity-10 text-danger">
+                        <i class="bi bi-building"></i>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="row">
+              <div class="col-lg-8 mb-4">
+                <div class="card dashboard-card">
+                  <div class="card-header bg-white">
+                    <h5 class="card-title mb-0">Employment Trends</h5>
+                  </div>
+                  <div class="card-body">
+                    <div class="chart-container">
+                      <canvas id="employmentTrendsChart"></canvas>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="col-lg-4 mb-4">
+                <div class="card dashboard-card">
+                  <div class="card-header bg-white">
+                    <h5 class="card-title mb-0">Job Sectors</h5>
+                  </div>
+                  <div class="card-body">
+                    <div class="chart-container">
+                      <canvas id="jobSectorsChart"></canvas>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="row">
+              <div class="col-12 mb-4">
+                <div class="card dashboard-card">
+                  <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                    <h5 class="card-title mb-0">Recent Job Placements</h5>
+                    <button class="btn btn-sm btn-outline-danger">View All</button>
+                  </div>
+                  <div class="card-body">
+                    <div class="table-responsive">
+                      <table class="table table-hover">
+                        <thead>
+                          <tr>
+                            <th>Candidate ID</th>
+                            <th>Name</th>
+                            <th>Position</th>
+                            <th>Company</th>
+                            <th>Placement Date</th>
+                            <th>Salary Range</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td>#EMP-2025-1042</td>
+                            <td>Amit Sharma</td>
+                            <td>Software Developer</td>
+                            <td>TechSolutions Inc.</td>
+                            <td>15 Apr 2025</td>
+                            <td>₹6-8 LPA</td>
+                          </tr>
+                          <tr>
+                            <td>#EMP-2025-1043</td>
+                            <td>Neha Patel</td>
+                            <td>Marketing Specialist</td>
+                            <td>Global Brands Ltd.</td>
+                            <td>14 Apr 2025</td>
+                            <td>₹5-7 LPA</td>
+                          </tr>
+                          <tr>
+                            <td>#EMP-2025-1044</td>
+                            <td>Rajesh Kumar</td>
+                            <td>Mechanical Engineer</td>
+                            <td>Precision Engineering Co.</td>
+                            <td>12 Apr 2025</td>
+                            <td>₹4-6 LPA</td>
+                          </tr>
+                          <tr>
+                            <td>#EMP-2025-1045</td>
+                            <td>Priya Singh</td>
+                            <td>HR Manager</td>
+                            <td>Sunrise Industries</td>
+                            <td>10 Apr 2025</td>
+                            <td>₹8-10 LPA</td>
+                          </tr>
+                          <tr>
+                            <td>#EMP-2025-1046</td>
+                            <td>Vikram Malhotra</td>
+                            <td>Data Analyst</td>
+                            <td>DataTech Solutions</td>
+                            <td>08 Apr 2025</td>
+                            <td>₹7-9 LPA</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+          
+          <!-- Industrial Relations Section -->
+          <section id="industrial-section" class="content-section">
+            <h2 class="page-title">Industrial Relations Department</h2>
+            
+            <div class="row mb-4">
+              <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card dashboard-card stat-card industrial-dept">
+                  <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                      <div>
+                        <h6 class="text-muted">Registered Industries</h6>
+                        <h3 class="mb-0">1,245</h3>
+                      </div>
+                      <div class="card-icon bg-warning bg-opacity-10 text-warning">
+                        <i class="bi bi-building"></i>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card dashboard-card stat-card industrial-dept">
+                  <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                      <div>
+                        <h6 class="text-muted">Trade Unions</h6>
+                        <h3 class="mb-0">248</h3>
+                      </div>
+                      <div class="card-icon bg-warning bg-opacity-10 text-warning">
+                        <i class="bi bi-people"></i>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card dashboard-card stat-card industrial-dept">
+                  <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                      <div>
+                        <h6 class="text-muted">Active Disputes</h6>
+                        <h3 class="mb-0">42</h3>
+                      </div>
+                      <div class="card-icon bg-warning bg-opacity-10 text-warning">
+                        <i class="bi bi-exclamation-triangle"></i>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card dashboard-card stat-card industrial-dept">
+                  <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                      <div>
+                        <h6 class="text-muted">Resolved Cases</h6>
+                        <h3 class="mb-0">124</h3>
+                      </div>
+                      <div class="card-icon bg-warning bg-opacity-10 text-warning">
+                        <i class="bi bi-check2-circle"></i>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="row">
+              <div class="col-lg-6 mb-4">
+                <div class="card dashboard-card">
+                  <div class="card-header bg-white">
+                    <h5 class="card-title mb-0">Dispute Resolution Status</h5>
+                  </div>
+                  <div class="card-body">
+                    <div class="chart-container">
+                      <canvas id="disputeResolutionChart"></canvas>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="col-lg-6 mb-4">
+                <div class="card dashboard-card">
+                  <div class="card-header bg-white">
+                    <h5 class="card-title mb-0">Industry Distribution</h5>
+                  </div>
+                  <div class="card-body">
+                    <div class="chart-container">
+                      <canvas id="industryDistributionChart"></canvas>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="row">
+              <div class="col-12 mb-4">
+                <div class="card dashboard-card">
+                  <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                    <h5 class="card-title mb-0">Recent Dispute Cases</h5>
+                    <button class="btn btn-sm btn-outline-warning">View All</button>
+                  </div>
+                  <div class="card-body">
+                    <div class="table-responsive">
+                      <table class="table table-hover">
+                        <thead>
+                          <tr>
+                            <th>Case ID</th>
+                            <th>Industry</th>
+                            <th>Issue Type</th>
+                            <th>Filed Date</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td>#IR-2025-042</td>
+                            <td>Sunrise Textiles Ltd.</td>
+                            <td>Wage Dispute</td>
+                            <td>10 Apr 2025</td>
+                            <td><span class="badge bg-warning">In Progress</span></td>
+                            <td><button class="btn btn-sm btn-outline-primary">View Details</button></td>
+                          </tr>
+                          <tr>
+                            <td>#IR-2025-043</td>
+                            <td>Global Manufacturing Inc.</td>
+                            <td>Working Conditions</td>
+                            <td>08 Apr 2025</td>
+                            <td><span class="badge bg-success">Resolved</span></td>
+                            <td><button class="btn btn-sm btn-outline-primary">View Details</button></td>
+                          </tr>
+                          <tr>
+                            <td>#IR-2025-044</td>
+                            <td>Eastern Electronics</td>
+                            <td>Layoff Dispute</td>
+                            <td>05 Apr 2025</td>
+                            <td><span class="badge bg-danger">Escalated</span></td>
+                            <td><button class="btn btn-sm btn-outline-primary">View Details</button></td>
+                          </tr>
+                          <tr>
+                            <td>#IR-2025-045</td>
+                            <td>Precision Tools Pvt. Ltd.</td>
+                            <td>Overtime Payment</td>
+                            <td>02 Apr 2025</td>
+                            <td><span class="badge bg-warning">In Progress</span></td>
+                            <td><button class="btn btn-sm btn-outline-primary">View Details</button></td>
+                          </tr>
+                          <tr>
+                            <td>#IR-2025-046</td>
+                            <td>Horizon Chemicals</td>
+                            <td>Safety Concerns</td>
+                            <td>01 Apr 2025</td>
+                            <td><span class="badge bg-success">Resolved</span></td>
+                            <td><button class="btn btn-sm btn-outline-primary">View Details</button></td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+          
+          <!-- Factories Section -->
+          <section id="factories-section" class="content-section">
+            <h2 class="page-title">Factories & Boilers Department</h2>
+            
+            <div class="row mb-4">
+              <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card dashboard-card stat-card factories-dept">
+                  <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                      <div>
+                        <h6 class="text-muted">Registered Factories</h6>
+                        <h3 class="mb-0">2,845</h3>
+                      </div>
+                      <div class="card-icon bg-info bg-opacity-10 text-info">
+                        <i class="bi bi-building"></i>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card dashboard-card stat-card factories-dept">
+                  <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                      <div>
+                        <h6 class="text-muted">Certified Boilers</h6>
+                        <h3 class="mb-0">1,248</h3>
+                      </div>
+                      <div class="card-icon bg-info bg-opacity-10 text-info">
+                        <i class="bi bi-gear"></i>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card dashboard-card stat-card factories-dept">
+                  <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                      <div>
+                        <h6 class="text-muted">Safety Inspections</h6>
+                        <h3 class="mb-0">458</h3>
+                      </div>
+                      <div class="card-icon bg-info bg-opacity-10 text-info">
+                        <i class="bi bi-shield-check"></i>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card dashboard-card stat-card factories-dept">
+                  <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                      <div>
+                        <h6 class="text-muted">Compliance Rate</h6>
+                        <h3 class="mb-0">86%</h3>
+                      </div>
+                      <div class="card-icon bg-info bg-opacity-10 text-info">
+                        <i class="bi bi-check-circle"></i>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="row">
+              <div class="col-lg-8 mb-4">
+                <div class="card dashboard-card">
+                  <div class="card-header bg-white">
+                    <h5 class="card-title mb-0">Safety Compliance Trends</h5>
+                  </div>
+                  <div class="card-body">
+                    <div class="chart-container">
+                      <canvas id="safetyComplianceChart"></canvas>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="col-lg-4 mb-4">
+                <div class="card dashboard-card">
+                  <div class="card-header bg-white">
+                    <h5 class="card-title mb-0">Inspection Results</h5>
+                  </div>
+                  <div class="card-body">
+                    <div class="chart-container">
+                      <canvas id="inspectionResultsChart"></canvas>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="row">
+              <div class="col-12 mb-4">
+                <div class="card dashboard-card">
+                  <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                    <h5 class="card-title mb-0">Recent Safety Certifications</h5>
+                    <button class="btn btn-sm btn-outline-info">View All</button>
+                  </div>
+                  <div class="card-body">
+                    <div class="table-responsive">
+                      <table class="table table-hover">
+                        <thead>
+                          <tr>
+                            <th>Certificate ID</th>
+                            <th>Factory Name</th>
+                            <th>Type</th>
+                            <th>Issue Date</th>
+                            <th>Valid Until</th>
+                            <th>Status</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td>#FB-2025-1042</td>
+                            <td>Eastern Steel Works</td>
+                            <td>Boiler Certification</td>
+                            <td>15 Apr 2025</td>
+                            <td>14 Apr 2026</td>
+                            <td><span class="badge bg-success">Valid</span></td>
+                          </tr>
+                          <tr>
+                            <td>#FB-2025-1043</td>
+                            <td>Global Textiles Ltd.</td>
+                            <td>Factory Safety</td>
+                            <td>12 Apr 2025</td>
+                            <td>11 Apr 2026</td>
+                            <td><span class="badge bg-success">Valid</span></td>
+                          </tr>
+                          <tr>
+                            <td>#FB-2025-1044</td>
+                            <td>Precision Engineering</td>
+                            <td>Machinery Safety</td>
+                            <td>10 Apr 2025</td>
+                            <td>09 Apr 2026</td>
+                            <td><span class="badge bg-success">Valid</span></td>
+                          </tr>
+                          <tr>
+                            <td>#FB-2025-1045</td>
+                            <td>Sunrise Chemicals</td>
+                            <td>Hazardous Materials</td>
+                            <td>08 Apr 2025</td>
+                            <td>07 Apr 2026</td>
+                            <td><span class="badge bg-success">Valid</span></td>
+                          </tr>
+                          <tr>
+                            <td>#FB-2025-1046</td>
+                            <td>Western Manufacturing</td>
+                            <td>Boiler Certification</td>
+                            <td>05 Apr 2025</td>
+                            <td>04 Apr 2026</td>
+                            <td><span class="badge bg-success">Valid</span></td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+          
+          <!-- Projects Section -->
+          <section id="projects-section" class="content-section">
+            <h2 class="page-title">Projects</h2>
+            
+            <div class="row mb-4">
+              <div class="col-12">
+                <div class="card dashboard-card">
+                  <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                    <h5 class="card-title mb-0">Project Overview</h5>
+                    <button class="btn btn-primary btn-sm">
+                      <i class="bi bi-plus-circle me-1"></i> New Project
+                    </button>
+                  </div>
+                  <div class="card-body">
+                    <div class="table-responsive">
+                      <table class="table table-hover">
+                        <thead>
+                          <tr>
+                            <th>Project Name</th>
+                            <th>Department</th>
+                            <th>Start Date</th>
+                            <th>Deadline</th>
+                            <th>Budget</th>
+                            <th>Status</th>
+                            <th>Progress</th>
+                            <th>Action</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td>Labour Welfare Portal</td>
+                            <td>Labour</td>
+                            <td>01 Jan 2025</td>
+                            <td>30 Jun 2025</td>
+                            <td>₹45 Lakhs</td>
+                            <td><span class="badge bg-success">On Track</span></td>
+                            <td>
+                              <div class="progress">
+                                <div class="progress-bar bg-success" role="progressbar" style="width: 65%" aria-valuenow="65" aria-valuemin="0" aria-valuemax="100"></div>
+                              </div>
+                            </td>
+                            <td>
+                              <button class="btn btn-sm btn-outline-primary">View</button>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>Skill Development Database</td>
+                            <td>Skill Development</td>
+                            <td>15 Feb 2025</td>
+                            <td>15 Aug 2025</td>
+                            <td>₹38 Lakhs</td>
+                            <td><span class="badge bg-warning">Delayed</span></td>
+                            <td>
+                              <div class="progress">
+                                <div class="progress-bar bg-warning" role="progressbar" style="width: 35%" aria-valuenow="35" aria-valuemin="0" aria-valuemax="100"></div>
+                              </div>
+                            </td>
+                            <td>
+                              <button class="btn btn-sm btn-outline-primary">View</button>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>Employment Exchange Modernization</td>
+                            <td>Employment</td>
+                            <td>01 Mar 2025</td>
+                            <td>30 Sep 2025</td>
+                            <td>₹52 Lakhs</td>
+                            <td><span class="badge bg-success">On Track</span></td>
+                            <td>
+                              <div class="progress">
+                                <div class="progress-bar bg-success" role="progressbar" style="width: 42%" aria-valuenow="42" aria-valuemin="0" aria-valuemax="100"></div>
+                              </div>
+                            </td>
+                            <td>
+                              <button class="btn btn-sm btn-outline-primary">View</button>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>Industrial Relations Management System</td>
+                            <td>Industrial Relations</td>
+                            <td>15 Jan 2025</td>
+                            <td>15 Jul 2025</td>
+                            <td>₹40 Lakhs</td>
+                            <td><span class="badge bg-danger">At Risk</span></td>
+                            <td>
+                              <div class="progress">
+                                <div class="progress-bar bg-danger" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+                              </div>
+                            </td>
+                            <td>
+                              <button class="btn btn-sm btn-outline-primary">View</button>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>Factory Safety Monitoring System</td>
+                            <td>Factories & Boilers</td>
+                            <td>01 Feb 2025</td>
+                            <td>31 Jul 2025</td>
+                            <td>₹48 Lakhs</td>
+                            <td><span class="badge bg-success">On Track</span></td>
+                            <td>
+                              <div class="progress">
+                                <div class="progress-bar bg-success" role="progressbar" style="width: 55%" aria-valuenow="55" aria-valuemin="0" aria-valuemax="100"></div>
+                              </div>
+                            </td>
+                            <td>
+                              <button class="btn btn-sm btn-outline-primary">View</button>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="row">
+              <div class="col-lg-6 mb-4">
+                <div class="card dashboard-card">
+                  <div class="card-header bg-white">
+                    <h5 class="card-title mb-0">Project Budget Allocation</h5>
+                  </div>
+                  <div class="card-body">
+                    <div class="chart-container">
+                      <canvas id="projectBudgetChart"></canvas>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="col-lg-6 mb-4">
+                <div class="card dashboard-card">
+                  <div class="card-header bg-white">
+                    <h5 class="card-title mb-0">Project Status Distribution</h5>
+                  </div>
+                  <div class="card-body">
+                    <div class="chart-container">
+                      <canvas id="projectStatusChart"></canvas>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+          
+          <!-- Reports Section -->
+          <section id="reports-section" class="content-section">
+            <h2 class="page-title">Reports</h2>
+            
+            <div class="row mb-4">
+              <div class="col-12">
+                <div class="card dashboard-card">
+                  <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                    <h5 class="card-title mb-0">Available Reports</h5>
+                    <div>
+                      <button class="btn btn-sm btn-outline-primary me-2">
+                        <i class="bi bi-funnel me-1"></i> Filter
+                      </button>
+                      <button class="btn btn-sm btn-primary">
+                        <i class="bi bi-plus-circle me-1"></i> Generate Report
+                      </button>
+                    </div>
+                  </div>
+                  <div class="card-body">
+                    <div class="table-responsive">
+                      <table class="table table-hover">
+                        <thead>
+                          <tr>
+                            <th>Report Name</th>
+                            <th>Department</th>
+                            <th>Generated On</th>
+                            <th>Generated By</th>
+                            <th>Type</th>
+                            <th>Actions</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td>Labour Welfare Schemes Performance Q1 2025</td>
+                            <td>Labour</td>
+                            <td>15 Apr 2025</td>
+                            <td>Dr. Rajesh Kumar</td>
+                            <td><span class="badge bg-primary">Quarterly</span></td>
+                            <td>
+                              <button class="btn btn-sm btn-outline-primary me-1">View</button>
+                              <button class="btn btn-sm btn-outline-success me-1">Download</button>
+                              <button class="btn btn-sm btn-outline-secondary">Share</button>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>Skill Development Programs Impact Analysis</td>
+                            <td>Skill Development</td>
+                            <td>10 Apr 2025</td>
+                            <td>Ms. Anita Desai</td>
+                            <td><span class="badge bg-info">Special</span></td>
+                            <td>
+                              <button class="btn btn-sm btn-outline-primary me-1">View</button>
+                              <button class="btn btn-sm btn-outline-success me-1">Download</button>
+                              <button class="btn btn-sm btn-outline-secondary">Share</button>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>Employment Trends Analysis 2025</td>
+                            <td>Employment</td>
+                            <td>05 Apr 2025</td>
+                            <td>Mr. Vikram Singh</td>
+                            <td><span class="badge bg-warning">Annual</span></td>
+                            <td>
+                              <button class="btn btn-sm btn-outline-primary me-1">View</button>
+                              <button class="btn btn-sm btn-outline-success me-1">Download</button>
+                              <button class="btn btn-sm btn-outline-secondary">Share</button>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>Industrial Disputes Resolution Efficiency</td>
+                            <td>Industrial Relations</td>
+                            <td>01 Apr 2025</td>
+                            <td>Ms. Priya Sharma</td>
+                            <td><span class="badge bg-primary">Quarterly</span></td>
+                            <td>
+                              <button class="btn btn-sm btn-outline-primary me-1">View</button>
+                              <button class="btn btn-sm btn-outline-success me-1">Download</button>
+                              <button class="btn btn-sm btn-outline-secondary">Share</button>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>Factory Safety Compliance Report</td>
+                            <td>Factories & Boilers</td>
+                            <td>28 Mar 2025</td>
+                            <td>Mr. Suresh Patel</td>
+                            <td><span class="badge bg-success">Monthly</span></td>
+                            <td>
+                              <button class="btn btn-sm btn-outline-primary me-1">View</button>
+                              <button class="btn btn-sm btn-outline-success me-1">Download</button>
+                              <button class="btn btn-sm btn-outline-secondary">Share</button>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="row">
+              <div class="col-lg-6 mb-4">
+                <div class="card dashboard-card">
+                  <div class="card-header bg-white">
+                    <h5 class="card-title mb-0">Report Generation Frequency</h5>
+                  </div>
+                  <div class="card-body">
+                    <div class="chart-container">
+                      <canvas id="reportFrequencyChart"></canvas>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="col-lg-6 mb-4">
+                <div class="card dashboard-card">
+                  <div class="card-header bg-white">
+                    <h5 class="card-title mb-0">Reports by Department</h5>
+                  </div>
+                  <div class="card-body">
+                    <div class="chart-container">
+                      <canvas id="reportsByDepartmentChart"></canvas>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+          
+          <!-- Notifications Section -->
+          <section id="notifications-section" class="content-section">
+            <h2 class="page-title">Notifications</h2>
+            
+            <div class="row mb-4">
+              <div class="col-12">
+                <div class="card dashboard-card">
+                  <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                    <h5 class="card-title mb-0">Recent Notifications</h5>
+                    <div>
+                      <button class="btn btn-sm btn-outline-primary me-2">
+                        <i class="bi bi-check-all me-1"></i> Mark All as Read
+                      </button>
+                      <button class="btn btn-sm btn-primary">
+                        <i class="bi bi-gear me-1"></i> Notification Settings
+                      </button>
+                    </div>
+                  </div>
+                  <div class="card-body p-0">
+                    <div class="list-group list-group-flush">
+                      <div class="notification-item d-flex">
+                        <div class="flex-shrink-0">
+                          <div class="bg-primary bg-opacity-10 text-primary rounded-circle p-2">
+                            <i class="bi bi-file-earmark-text"></i>
+                          </div>
+                        </div>
+                        <div class="ms-3 flex-grow-1">
+                          <div class="d-flex justify-content-between align-items-center">
+                            <h6 class="mb-1">New policy document uploaded</h6>
+                            <small class="notification-time">2 hours ago</small>
+                          </div>
+                          <p class="text-muted mb-0">Labour Department has uploaded a new policy document regarding minimum wages.</p>
+                        </div>
+                      </div>
+                      
+                      <div class="notification-item d-flex">
+                        <div class="flex-shrink-0">
+                          <div class="bg-success bg-opacity-10 text-success rounded-circle p-2">
+                            <i class="bi bi-calendar-event"></i>
+                          </div>
+                        </div>
+                        <div class="ms-3 flex-grow-1">
+                          <div class="d-flex justify-content-between align-items-center">
+                            <h6 class="mb-1">Quarterly review meeting scheduled</h6>
+                            <small class="notification-time">Yesterday</small>
+                          </div>
+                          <p class="text-muted mb-0">Skill Development Department has scheduled a quarterly review meeting for next week.</p>
+                        </div>
+                      </div>
+                      
+                      <div class="notification-item d-flex">
+                        <div class="flex-shrink-0">
+                          <div class="bg-warning bg-opacity-10 text-warning rounded-circle p-2">
+                            <i class="bi bi-graph-up"></i>
+                          </div>
+                        </div>
+                        <div class="ms-3 flex-grow-1">
+                          <div class="d-flex justify-content-between align-items-center">
+                            <h6 class="mb-1">Employment statistics updated</h6> <div class="ms-3 flex-grow-1">
+                          <div class="d-flex justify-content-between align-items-center">
+                            <h6 class="mb-1">Employment statistics updated</h6>
+                            <small class="notification-time">2 days ago</small>
+                          </div>
+                          <p class="text-muted mb-0">Employment Department has updated the quarterly employment statistics.</p>
+                        </div>
+                      </div>
+                      
+                      <div class="notification-item d-flex">
+                        <div class="flex-shrink-0">
+                          <div class="bg-info bg-opacity-10 text-info rounded-circle p-2">
+                            <i class="bi bi-people"></i>
+                          </div>
+                        </div>
+                        <div class="ms-3 flex-grow-1">
+                          <div class="d-flex justify-content-between align-items-center">
+                            <h6 class="mb-1">New staff onboarding completed</h6>
+                            <small class="notification-time">3 days ago</small>
+                          </div>
+                          <p class="text-muted mb-0">Industrial Relations Department has completed onboarding of 15 new staff members.</p>
+                        </div>
+                      </div>
+                      
+                      <div class="notification-item d-flex">
+                        <div class="flex-shrink-0">
+                          <div class="bg-danger bg-opacity-10 text-danger rounded-circle p-2">
+                            <i class="bi bi-exclamation-triangle"></i>
+                          </div>
+                        </div>
+                        <div class="ms-3 flex-grow-1">
+                          <div class="d-flex justify-content-between align-items-center">
+                            <h6 class="mb-1">System maintenance scheduled</h6>
+                            <small class="notification-time">4 days ago</small>
+                          </div>
+                          <p class="text-muted mb-0">System maintenance is scheduled for this weekend. Please save your work accordingly.</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div><br>
+            
+              <!-- <div class="col-lg-6 mb-4">
+                <div class="card dashboard-card">
+                  <div class="card-header bg-white">
+                    <h5 class="card-title mb-0">Notification Preferences</h5>
+                  </div>
+                  <div class="card-body">
+                    <div class="mb-3">
+                      <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" id="emailNotifications" checked>
+                        <label class="form-check-label" for="emailNotifications">Email Notifications</label>
+                      </div>
+                    </div>
+                    <div class="mb-3">
+                      <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" id="smsNotifications">
+                        <label class="form-check-label" for="smsNotifications">SMS Notifications</label>
+                      </div>
+                    </div>
+                    <div class="mb-3">
+                      <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" id="systemNotifications" checked>
+                        <label class="form-check-label" for="systemNotifications">System Notifications</label>
+                      </div>
+                    </div>
+                    <div class="mb-3">
+                      <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" id="reportNotifications" checked>
+                        <label class="form-check-label" for="reportNotifications">Report Notifications</label>
+                      </div>
+                    </div>
+                    <div class="mb-3">
+                      <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" id="meetingNotifications" checked>
+                        <label class="form-check-label" for="meetingNotifications">Meeting Reminders</label>
+                      </div>
+                    </div>
+                    <button class="btn btn-primary mt-3">Save Preferences</button>
+                  </div>
+                </div>
+              </div>
+            </div> -->
+          </section>
+                    <!-- <button type="submit" class="btn btn-primary">Save Settings</button> -->
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap JS Bundle with Popper -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+  
+  <!-- Custom JavaScript -->
+  <script src="script.js"></script>
+</body>
+</html>

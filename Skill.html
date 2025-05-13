@@ -1,0 +1,1113 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Labour, Skill Development and Employment Department Dashboard</title>
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style src="style.css"></style>
+  <style>/* Custom Styles */
+    :root {
+      --primary-color: #0d6efd;
+      --secondary-color: #0d6efd;
+      --accent-color: #0d6efd;
+      --light-color: #ecf0f1;
+      --dark-color: #2c3e50;
+      --success-color: #0d6efd; /* Changed from green */
+      --warning-color: #0d6efd;
+      --info-color: #0d6efd;
+    }
+    
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f5f7fa;
+      color: #333;
+    }
+    
+    /* Sidebar Styles */
+    .sidebar {
+      background: var(--primary-color);
+      min-height: 100vh;
+      color: white;
+      transition: all 0.3s;
+    }
+    
+    .sidebar .logo {
+      padding: 20px 15px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .sidebar .nav-link {
+      color: rgba(255, 255, 255, 0.7);
+      padding: 12px 20px;
+      margin: 4px 0;
+      border-radius: 5px;
+      transition: all 0.3s;
+    }
+    
+    .sidebar .nav-link:hover,
+    .sidebar .nav-link.active {
+      background-color: rgba(255, 255, 255, 0.1);
+      color: white;
+    }
+    
+    .sidebar .nav-link i {
+      margin-right: 10px;
+      width: 20px;
+      text-align: center;
+    }
+    
+    .sidebar .department-item {
+      padding-left: 40px;
+    }
+    
+    /* Main Content Styles */
+    .main-content {
+      padding: 20px;
+    }
+    
+    .page-title {
+      font-weight: 600;
+      margin-bottom: 25px;
+      color: var(--dark-color);
+    }
+    
+    /* Card Styles */
+    .dashboard-card {
+      border-radius: 10px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+      transition: transform 0.3s;
+      height: 100%;
+      border: none;
+    }
+    
+    .dashboard-card:hover {
+      transform: translateY(-5px);
+    }
+    
+    .card-icon {
+      width: 50px;
+      height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 10px;
+      font-size: 24px;
+      margin-bottom: 15px;
+      background-color: #0d6efd !important; /* Changed from green */
+      color: white !important;
+    }
+    
+    .stat-card {
+      border-left: 5px solid;
+      padding: 15px;
+    }
+    
+    .stat-card.primary {
+      border-left-color: var(--primary-color);
+    }
+    
+    .stat-card.success {
+      border-left-color: var(--success-color);
+    }
+    
+    .stat-card.warning {
+      border-left-color: var(--warning-color);
+    }
+    
+    .stat-card.info {
+      border-left-color: var(--info-color);
+    }
+    
+    /* Chart Containers */
+    .chart-container {
+      position: relative;
+      height: 300px;
+      width: 100%;
+    }
+    
+    /* Department Section Styles */
+    .department-section {
+      padding: 20px;
+      margin-bottom: 30px;
+      border-radius: 10px;
+      background-color: white;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    }
+    
+    .department-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #eee;
+    }
+    
+    .department-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--primary-color);
+    }
+    
+    .sub-department-card {
+      border-radius: 8px;
+      padding: 15px;
+      margin-bottom: 15px;
+      background-color: #f8f9fa;
+      border-left: 4px solid var(--primary-color);
+      transition: all 0.3s;
+    }
+    
+    .sub-department-card:hover {
+      background-color: #e9ecef;
+      transform: translateX(5px);
+    }
+    
+    /* Table Styles */
+    .custom-table {
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    }
+    
+    .custom-table thead {
+      background-color: var(--primary-color);
+      color: white;
+    }
+    
+    /* Progress Bar Styles */
+    .progress {
+      height: 10px;
+      border-radius: 5px;
+      background-color: #d6e4ff !important; /* Light blue */
+    }
+    
+    .progress-bar {
+      background-color: #0d6efd !important; /* Changed from green */
+    }
+    
+    /* Notification Styles */
+    .notification-item {
+      padding: 15px;
+      border-bottom: 1px solid #eee;
+      transition: background-color 0.3s;
+    }
+    
+    .notification-item:hover {
+      background-color: #f8f9fa;
+    }
+    
+    .notification-time {
+      font-size: 0.8rem;
+      color: #6c757d;
+    }
+    
+    /* Profile Dropdown */
+    .profile-dropdown {
+      cursor: pointer;
+    }
+    
+    .profile-dropdown img {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+    
+    /* Mobile Responsiveness */
+    @media (max-width: 768px) {
+      .sidebar {
+        position: fixed;
+        top: 0;
+        left: -250px;
+        width: 250px;
+        z-index: 1000;
+        transition: left 0.3s;
+      }
+    
+      .sidebar.active {
+        left: 0;
+      }
+    
+      .main-content {
+        margin-left: 0 !important;
+      }
+    
+      .toggle-sidebar {
+        display: block !important;
+      }
+    }
+    
+    /* Toggle Button */
+    .toggle-sidebar {
+      display: none;
+      position: fixed;
+      top: 15px;
+      left: 15px;
+      z-index: 1001;
+      background-color: var(--primary-color);
+      color: white;
+      border: none;
+      border-radius: 5px;
+      padding: 8px 12px;
+    }
+    
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    
+    ::-webkit-scrollbar-track {
+      background: #f1f1f1;
+    }
+    
+    ::-webkit-scrollbar-thumb {
+      background: #888;
+      border-radius: 10px;
+    }
+    
+    ::-webkit-scrollbar-thumb:hover {
+      background: #555;
+    }
+    
+    /* Animation */
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+    
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    .fade-in {
+      animation: fadeIn 0.5s ease-out forwards;
+    }
+    
+    /* Department Colors */
+    .labour-dept,
+    .skill-dept,
+    .employment-dept,
+    .industrial-dept,
+    .factories-dept {
+      border-left-color: #0d6efd !important; /* Changed from green */
+    }
+    
+    /* Modal Styles */
+    .custom-modal .modal-header {
+      background-color: var(--primary-color);
+      color: white;
+      border-radius: 10px 10px 0 0;
+    }
+    
+    .custom-modal .modal-footer {
+      border-top: none;
+    }
+  </style>      
+</head>
+
+<body>
+  <!-- Toggle Sidebar Button (Mobile) -->
+  <button class="toggle-sidebar" id="toggleSidebar">
+    <i class="bi bi-list"></i>
+  </button>
+
+  <div class="container-fluid">
+    <div class="row">
+      <!-- Sidebar -->
+      <div class="col-lg-2 col-md-3 p-0 sidebar" id="sidebar">
+        <div class="logo d-flex align-items-center">
+          <i class="bi bi-building me-2 fs-4"></i>
+          <h5 class="mb-0">Skill Development</h5>
+        </div>
+        <div class="mt-4">
+          <ul class="nav flex-column">
+
+            <li class="nav-item">
+              <a href="./dashboard.html" class="nav-link" data-section="departments">
+                <i class="bi bi-diagram-3"></i> Dashboard
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="#" class="nav-link" data-bs-toggle="collapse" data-bs-target="#deptSubmenu">
+                <i class="bi bi-building"></i>Departments
+                <i class="bi bi-chevron-down float-end"></i>
+              </a>
+              <div class="collapse" id="deptSubmenu">
+                <ul class="nav flex-column">
+                  <li class="nav-item">
+                    <a href="./labour.php" class="nav-link department-item" data-section="">
+                      Labour
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="./Skill.html" class="nav-link department-item" data-section="">
+                      Skill Development
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="./Employment.html" class="nav-link department-item" data-section="">
+                      Employment
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </li>
+            <!-- <li class="nav-item">
+              <a href="#projects" class="nav-link" data-section="projects">
+                <i class="bi bi-kanban"></i> Projects
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="#reports" class="nav-link" data-section="reports">
+                <i class="bi bi-file-earmark-text"></i> Reports
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="#notifications" class="nav-link" data-section="notifications">
+                <i class="bi bi-bell"></i> Notifications
+                <span class="badge bg-danger rounded-pill float-end">5</span>
+              </a>
+            </li> -->
+            <!-- <li class="nav-item">
+              <a href="#settings" class="nav-link" data-section="settings">
+                <i class="bi bi-gear"></i> Settings
+              </a>
+            </li> -->
+          </ul>
+        </div>
+      </div>
+
+      <!-- Main Content -->
+      <div class="col-lg-10 col-md-9 ms-auto main-content">
+        <!-- Top Navigation -->
+        <div class="row mb-4">
+          <div class="col-12">
+            <nav class="navbar navbar-expand-lg navbar-light bg-white rounded shadow-sm">
+              <div class="container-fluid">
+                <form class="d-flex me-auto">
+
+                </form>
+                <ul class="navbar-nav ms-auto">
+                  <li class="nav-item dropdown me-3">
+                    <a class="nav-link" href="#" role="button" data-bs-toggle="dropdown">
+                      <i class="bi bi-bell fs-5 position-relative">
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                          5
+                        </span>
+                      </i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                      <li>
+                        <h6 class="dropdown-header">Notifications</h6>
+                      </li>
+                      <li>
+                        <hr class="dropdown-divider">
+                      </li>
+                      <li><a class="dropdown-item" href="#">New report from Labour Department</a></li>
+                      <li><a class="dropdown-item" href="#">Skill Development meeting scheduled</a></li><br>
+                      <li><br><a class="dropdown-item" href="#">Employment statistics updated</a></li>
+                      <li><a class="dropdown-item" href="#">New policy document uploaded</a></li>
+                      <li><a class="dropdown-item" href="#">System maintenance scheduled</a></li>
+                    </ul>
+                  </li>
+                  <li class="nav-item dropdown">
+                    <a class="nav-link profile-dropdown d-flex align-items-center" href="#" role="button"
+                      data-bs-toggle="dropdown">
+                      <img
+                        src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
+                        alt="Profile">
+                      <span class="ms-2 d-none d-lg-inline">Admin User</span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                      <li><a class="dropdown-item" href="#"><i class="bi bi-person me-2"></i>Profile</a></li>
+                      <li><a class="dropdown-item" href="#"><i class="bi bi-gear me-2"></i>Settings</a></li>
+                      <li>
+                        <hr class="dropdown-divider">
+                      </li>
+                      <li><a class="dropdown-item" href="./logout.php"><i class="bi bi-box-arrow-right me-2"></i>Logout</a></li>
+                    </ul>
+                  </li>
+                </ul>
+              </div>
+            </nav>
+          </div>
+        </div>
+
+        <!-- Content Sections -->
+        <div id="content-sections">
+          <!-- Dashboard Section -->
+          <section id="dashboard-section" class="content-section active fade-in">
+
+            <!-- Skill Development Section -->
+            <section id="skill-section" class="content-section">
+              <h2 class="page-title">Skill Development Department</h2>
+
+              <div class="row mb-4">
+                <div class="col-xl-3 col-md-6 mb-4">
+                  <div class="card dashboard-card stat-card skill-dept">
+                    <div class="card-body">
+                      <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                          <h6 class="text-muted">Training Centers</h6>
+                          <h3 class="mb-0">48</h3>
+                        </div>
+                        <div class="card-icon bg-success bg-opacity-10 text-success">
+                          <i class="bi bi-building"></i>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-xl-3 col-md-6 mb-4">
+                  <div class="card dashboard-card stat-card skill-dept">
+                    <div class="card-body">
+                      <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                          <h6 class="text-muted">Active Trainees</h6>
+                          <h3 class="mb-0">12,458</h3>
+                        </div>
+                        <div class="card-icon bg-success bg-opacity-10 text-success">
+                          <i class="bi bi-people"></i>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-xl-3 col-md-6 mb-4">
+                  <div class="card dashboard-card stat-card skill-dept">
+                    <div class="card-body">
+                      <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                          <h6 class="text-muted">Courses Offered</h6>
+                          <h3 class="mb-0">124</h3>
+                        </div>
+                        <div class="card-icon bg-success bg-opacity-10 text-success">
+                          <i class="bi bi-journal-text"></i>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-xl-3 col-md-6 mb-4">
+                  <div class="card dashboard-card stat-card skill-dept">
+                    <div class="card-body">
+                      <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                          <h6 class="text-muted">Placement Rate</h6>
+                          <h3 class="mb-0">78%</h3>
+                        </div>
+                        <div class="card-icon bg-success bg-opacity-10 text-success">
+                          <i class="bi bi-graph-up"></i>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-lg-8 mb-4">
+                  <div class="card dashboard-card">
+                    <div class="card-header bg-white">
+                      <h5 class="card-title mb-0">Training Program Enrollment</h5>
+                    </div>
+                    <div class="card-body">
+                      <div class="chart-container">
+                        <canvas id="skillEnrollmentChart"></canvas>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-lg-4 mb-4">
+                  <div class="card dashboard-card">
+                    <div class="card-header bg-white">
+                      <h5 class="card-title mb-0">Top Skills in Demand</h5>
+                    </div>
+                    <div class="card-body">
+                      <div class="mb-3">
+                        <div class="d-flex justify-content-between mb-1">
+                          <span>Data Analytics</span>
+                          <span>85%</span>
+                        </div>
+                        <div class="progress">
+                          <div class="progress-bar bg-success" role="progressbar" style="width: 85%" aria-valuenow="85"
+                            aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                      </div>
+                      <div class="mb-3">
+                        <div class="d-flex justify-content-between mb-1">
+                          <span>Digital Marketing</span>
+                          <span>78%</span>
+                        </div>
+                        <div class="progress">
+                          <div class="progress-bar bg-success" role="progressbar" style="width: 78%" aria-valuenow="78"
+                            aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                      </div>
+                      <div class="mb-3">
+                        <div class="d-flex justify-content-between mb-1">
+                          <span>Web Development</span>
+                          <span>72%</span>
+                        </div>
+                        <div class="progress">
+                          <div class="progress-bar bg-success" role="progressbar" style="width: 72%" aria-valuenow="72"
+                            aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                      </div>
+                      <div class="mb-3">
+                        <div class="d-flex justify-content-between mb-1">
+                          <span>Cloud Computing</span>
+                          <span>68%</span>
+                        </div>
+                        <div class="progress">
+                          <div class="progress-bar bg-success" role="progressbar" style="width: 68%" aria-valuenow="68"
+                            aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                      </div>
+                      <div>
+                        <div class="d-flex justify-content-between mb-1">
+                          <span>Machine Learning</span>
+                          <span>65%</span>
+                        </div>
+                        <div class="progress">
+                          <div class="progress-bar bg-success" role="progressbar" style="width: 65%" aria-valuenow="65"
+                            aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-12 mb-4">
+                  <div class="card dashboard-card">
+                    <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                      <h5 class="card-title mb-0">Upcoming Training Programs</h5>
+                      <button class="btn btn-sm btn-outline-success">Add New Program</button>
+                    </div>
+                    <div class="card-body">
+                      <div class="table-responsive">
+                        <table class="table table-hover">
+                          <thead>
+                            <tr>
+                              <th>Program ID</th>
+                              <th>Program Name</th>
+                              <th>Start Date</th>
+                              <th>Duration</th>
+                              <th>Location</th>
+                              <th>Seats</th>
+                              <th>Status</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr>
+                              <td>#TRN-2025-042</td>
+                              <td>Advanced Web Development</td>
+                              <td>20 Apr 2025</td>
+                              <td>3 Months</td>
+                              <td>Central Training Center</td>
+                              <td>40/50</td>
+                              <td><span class="badge bg-warning">Filling Fast</span></td>
+                            </tr>
+                            <tr>
+                              <td>#TRN-2025-043</td>
+                              <td>Digital Marketing Essentials</td>
+                              <td>25 Apr 2025</td>
+                              <td>2 Months</td>
+                              <td>East Zone Institute</td>
+                              <td>35/40</td>
+                              <td><span class="badge bg-success">Open</span></td>
+                            </tr>
+                            <tr>
+                              <td>#TRN-2025-044</td>
+                              <td>Cloud Computing Fundamentals</td>
+                              <td>01 May 2025</td>
+                              <td>3 Months</td>
+                              <td>Tech Training Hub</td>
+                              <td>25/45</td>
+                              <td><span class="badge bg-success">Open</span></td>
+                            </tr>
+                            <tr>
+                              <td>#TRN-2025-045</td>
+                              <td>Data Science Bootcamp</td>
+                              <td>05 May 2025</td>
+                              <td>4 Months</td>
+                              <td>Central Training Center</td>
+                              <td>50/50</td>
+                              <td><span class="badge bg-danger">Filled</span></td>
+                            </tr>
+                            <tr>
+                              <td>#TRN-2025-046</td>
+                              <td>Mobile App Development</td>
+                              <td>10 May 2025</td>
+                              <td>3 Months</td>
+                              <td>West Zone Institute</td>
+                              <td>20/40</td>
+                              <td><span class="badge bg-success">Open</span></td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            
+
+            
+
+            <!-- Projects Section -->
+            <section id="projects-section" class="content-section">
+              <h2 class="page-title">Projects</h2>
+
+              <div class="row mb-4">
+                <div class="col-12">
+                  <div class="card dashboard-card">
+                    <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                      <h5 class="card-title mb-0">Project Overview</h5>
+                      <button class="btn btn-primary btn-sm">
+                        <i class="bi bi-plus-circle me-1"></i> New Project
+                      </button>
+                    </div>
+                    <div class="card-body">
+                      <div class="table-responsive">
+                        <table class="table table-hover">
+                          <thead>
+                            <tr>
+                              <th>Project Name</th>
+                              <th>Department</th>
+                              <th>Start Date</th>
+                              <th>Deadline</th>
+                              <th>Budget</th>
+                              <th>Status</th>
+                              <th>Progress</th>
+                              <th>Action</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr>
+                              <td>Labour Welfare Portal</td>
+                              <td>Labour</td>
+                              <td>01 Jan 2025</td>
+                              <td>30 Jun 2025</td>
+                              <td>₹45 Lakhs</td>
+                              <td><span class="badge bg-success">On Track</span></td>
+                              <td>
+                                <div class="progress">
+                                  <div class="progress-bar bg-success" role="progressbar" style="width: 65%"
+                                    aria-valuenow="65" aria-valuemin="0" aria-valuemax="100"></div>
+                                </div>
+                              </td>
+                              <td>
+                                <button class="btn btn-sm btn-outline-primary">View</button>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>Skill Development Database</td>
+                              <td>Skill Development</td>
+                              <td>15 Feb 2025</td>
+                              <td>15 Aug 2025</td>
+                              <td>₹38 Lakhs</td>
+                              <td><span class="badge bg-warning">Delayed</span></td>
+                              <td>
+                                <div class="progress">
+                                  <div class="progress-bar bg-warning" role="progressbar" style="width: 35%"
+                                    aria-valuenow="35" aria-valuemin="0" aria-valuemax="100"></div>
+                                </div>
+                              </td>
+                              <td>
+                                <button class="btn btn-sm btn-outline-primary">View</button>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>Employment Exchange Modernization</td>
+                              <td>Employment</td>
+                              <td>01 Mar 2025</td>
+                              <td>30 Sep 2025</td>
+                              <td>₹52 Lakhs</td>
+                              <td><span class="badge bg-success">On Track</span></td>
+                              <td>
+                                <div class="progress">
+                                  <div class="progress-bar bg-success" role="progressbar" style="width: 42%"
+                                    aria-valuenow="42" aria-valuemin="0" aria-valuemax="100"></div>
+                                </div>
+                              </td>
+                              <td>
+                                <button class="btn btn-sm btn-outline-primary">View</button>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>Industrial Relations Management System</td>
+                              <td>Industrial Relations</td>
+                              <td>15 Jan 2025</td>
+                              <td>15 Jul 2025</td>
+                              <td>₹40 Lakhs</td>
+                              <td><span class="badge bg-danger">At Risk</span></td>
+                              <td>
+                                <div class="progress">
+                                  <div class="progress-bar bg-danger" role="progressbar" style="width: 25%"
+                                    aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+                                </div>
+                              </td>
+                              <td>
+                                <button class="btn btn-sm btn-outline-primary">View</button>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>Factory Safety Monitoring System</td>
+                              <td>Factories & Boilers</td>
+                              <td>01 Feb 2025</td>
+                              <td>31 Jul 2025</td>
+                              <td>₹48 Lakhs</td>
+                              <td><span class="badge bg-success">On Track</span></td>
+                              <td>
+                                <div class="progress">
+                                  <div class="progress-bar bg-success" role="progressbar" style="width: 55%"
+                                    aria-valuenow="55" aria-valuemin="0" aria-valuemax="100"></div>
+                                </div>
+                              </td>
+                              <td>
+                                <button class="btn btn-sm btn-outline-primary">View</button>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+             
+            </section>
+
+            <!-- Reports Section -->
+            <section id="reports-section" class="content-section">
+              <h2 class="page-title">Reports</h2>
+
+              <div class="row mb-4">
+                <div class="col-12">
+                  <div class="card dashboard-card">
+                    <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                      <h5 class="card-title mb-0">Available Reports</h5>
+                      <div>
+                        <button class="btn btn-sm btn-outline-primary me-2">
+                          <i class="bi bi-funnel me-1"></i> Filter
+                        </button>
+                        <button class="btn btn-sm btn-primary">
+                          <i class="bi bi-plus-circle me-1"></i> Generate Report
+                        </button>
+                      </div>
+                    </div>
+                    <div class="card-body">
+                      <div class="table-responsive">
+                        <table class="table table-hover">
+                          <thead>
+                            <tr>
+                              <th>Report Name</th>
+                              <th>Department</th>
+                              <th>Generated On</th>
+                              <th>Generated By</th>
+                              <th>Type</th>
+                              <th>Actions</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr>
+                              <td>Labour Welfare Schemes Performance Q1 2025</td>
+                              <td>Labour</td>
+                              <td>15 Apr 2025</td>
+                              <td>Dr. Rajesh Kumar</td>
+                              <td><span class="badge bg-primary">Quarterly</span></td>
+                              <td>
+                                <button class="btn btn-sm btn-outline-primary me-1">View</button>
+                                <button class="btn btn-sm btn-outline-success me-1">Download</button>
+                                <button class="btn btn-sm btn-outline-secondary">Share</button>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>Skill Development Programs Impact Analysis</td>
+                              <td>Skill Development</td>
+                              <td>10 Apr 2025</td>
+                              <td>Ms. Anita Desai</td>
+                              <td><span class="badge bg-info">Special</span></td>
+                              <td>
+                                <button class="btn btn-sm btn-outline-primary me-1">View</button>
+                                <button class="btn btn-sm btn-outline-success me-1">Download</button>
+                                <button class="btn btn-sm btn-outline-secondary">Share</button>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>Employment Trends Analysis 2025</td>
+                              <td>Employment</td>
+                              <td>05 Apr 2025</td>
+                              <td>Mr. Vikram Singh</td>
+                              <td><span class="badge bg-warning">Annual</span></td>
+                              <td>
+                                <button class="btn btn-sm btn-outline-primary me-1">View</button>
+                                <button class="btn btn-sm btn-outline-success me-1">Download</button>
+                                <button class="btn btn-sm btn-outline-secondary">Share</button>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>Industrial Disputes Resolution Efficiency</td>
+                              <td>Industrial Relations</td>
+                              <td>01 Apr 2025</td>
+                              <td>Ms. Priya Sharma</td>
+                              <td><span class="badge bg-primary">Quarterly</span></td>
+                              <td>
+                                <button class="btn btn-sm btn-outline-primary me-1">View</button>
+                                <button class="btn btn-sm btn-outline-success me-1">Download</button>
+                                <button class="btn btn-sm btn-outline-secondary">Share</button>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>Factory Safety Compliance Report</td>
+                              <td>Factories & Boilers</td>
+                              <td>28 Mar 2025</td>
+                              <td>Mr. Suresh Patel</td>
+                              <td><span class="badge bg-success">Monthly</span></td>
+                              <td>
+                                <button class="btn btn-sm btn-outline-primary me-1">View</button>
+                                <button class="btn btn-sm btn-outline-success me-1">Download</button>
+                                <button class="btn btn-sm btn-outline-secondary">Share</button>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              
+            </section>
+
+            <!-- Notifications Section -->
+            <section id="notifications-section" class="content-section">
+              <h2 class="page-title">Notifications</h2>
+
+              <div class="row mb-4">
+                <div class="col-12">
+                  <div class="card dashboard-card">
+                    <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                      <h5 class="card-title mb-0">Recent Notifications</h5>
+                      <div>
+                        <button class="btn btn-sm btn-outline-primary me-2">
+                          <i class="bi bi-check-all me-1"></i> Mark All as Read
+                        </button>
+                        <button class="btn btn-sm btn-primary">
+                          <i class="bi bi-gear me-1"></i> Notification Settings
+                        </button>
+                      </div>
+                    </div>
+                    <div class="card-body p-0">
+                      <div class="list-group list-group-flush">
+                        <div class="notification-item d-flex">
+                          <div class="flex-shrink-0">
+                            <div class="bg-primary bg-opacity-10 text-primary rounded-circle p-2">
+                              <i class="bi bi-file-earmark-text"></i>
+                            </div>
+                          </div>
+                          <div class="ms-3 flex-grow-1">
+                            <div class="d-flex justify-content-between align-items-center">
+                              <h6 class="mb-1">New policy document uploaded</h6>
+                              <small class="notification-time">2 hours ago</small>
+                            </div>
+                            <p class="text-muted mb-0">Labour Department has uploaded a new policy document regarding
+                              minimum wages.</p>
+                          </div>
+                        </div>
+
+                        <div class="notification-item d-flex">
+                          <div class="flex-shrink-0">
+                            <div class="bg-success bg-opacity-10 text-success rounded-circle p-2">
+                              <i class="bi bi-calendar-event"></i>
+                            </div>
+                          </div>
+                          <div class="ms-3 flex-grow-1">
+                            <div class="d-flex justify-content-between align-items-center">
+                              <h6 class="mb-1">Quarterly review meeting scheduled</h6>
+                              <small class="notification-time">Yesterday</small>
+                            </div>
+                            <p class="text-muted mb-0">Skill Development Department has scheduled a quarterly review
+                              meeting for next week.</p>
+                          </div>
+                        </div>
+
+                        <div class="notification-item d-flex">
+                          <div class="flex-shrink-0">
+                            <div class="bg-warning bg-opacity-10 text-warning rounded-circle p-2">
+                              <i class="bi bi-graph-up"></i>
+                            </div>
+                          </div>
+                          <div class="ms-3 flex-grow-1">
+                            <div class="d-flex justify-content-between align-items-center">
+                              <h6 class="mb-1">Employment statistics updated</h6>
+                              <div class="ms-3 flex-grow-1">
+                                <div class="d-flex justify-content-between align-items-center">
+                                  <h6 class="mb-1">Employment statistics updated</h6>
+                                  <small class="notification-time">2 days ago</small>
+                                </div>
+                                <p class="text-muted mb-0">Employment Department has updated the quarterly employment
+                                  statistics.</p>
+                              </div>
+                            </div>
+
+                            <div class="notification-item d-flex">
+                              <div class="flex-shrink-0">
+                                <div class="bg-info bg-opacity-10 text-info rounded-circle p-2">
+                                  <i class="bi bi-people"></i>
+                                </div>
+                              </div>
+                              <div class="ms-3 flex-grow-1">
+                                <div class="d-flex justify-content-between align-items-center">
+                                  <h6 class="mb-1">New staff onboarding completed</h6>
+                                  <small class="notification-time">3 days ago</small>
+                                </div>
+                                <p class="text-muted mb-0">Industrial Relations Department has completed onboarding of
+                                  15 new staff members.</p>
+                              </div>
+                            </div>
+
+                            <div class="notification-item d-flex">
+                              <div class="flex-shrink-0">
+                                <div class="bg-danger bg-opacity-10 text-danger rounded-circle p-2">
+                                  <i class="bi bi-exclamation-triangle"></i>
+                                </div>
+                              </div>
+                              <div class="ms-3 flex-grow-1">
+                                <div class="d-flex justify-content-between align-items-center">
+                                  <h6 class="mb-1">System maintenance scheduled</h6>
+                                  <small class="notification-time">4 days ago</small>
+                                </div>
+                                <p class="text-muted mb-0">System maintenance is scheduled for this weekend. Please save
+                                  your work accordingly.</p>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div><br>
+
+                  <!-- <div class="col-lg-6 mb-4">
+                <div class="card dashboard-card">
+                  <div class="card-header bg-white">
+                    <h5 class="card-title mb-0">Notification Preferences</h5>
+                  </div>
+                  <div class="card-body">
+                    <div class="mb-3">
+                      <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" id="emailNotifications" checked>
+                        <label class="form-check-label" for="emailNotifications">Email Notifications</label>
+                      </div>
+                    </div>
+                    <div class="mb-3">
+                      <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" id="smsNotifications">
+                        <label class="form-check-label" for="smsNotifications">SMS Notifications</label>
+                      </div>
+                    </div>
+                    <div class="mb-3">
+                      <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" id="systemNotifications" checked>
+                        <label class="form-check-label" for="systemNotifications">System Notifications</label>
+                      </div>
+                    </div>
+                    <div class="mb-3">
+                      <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" id="reportNotifications" checked>
+                        <label class="form-check-label" for="reportNotifications">Report Notifications</label>
+                      </div>
+                    </div>
+                    <div class="mb-3">
+                      <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" id="meetingNotifications" checked>
+                        <label class="form-check-label" for="meetingNotifications">Meeting Reminders</label>
+                      </div>
+                    </div>
+                    <button class="btn btn-primary mt-3">Save Preferences</button>
+                  </div>
+                </div>
+              </div>
+            </div> -->
+            </section>
+            <!-- <button type="submit" class="btn btn-primary">Save Settings</button> -->
+        </div>
+      </div>
+    </div>
+  </div>
+  </section>
+  </div>
+  </div>
+  </div>
+  </div>
+
+  <!-- Bootstrap JS Bundle with Popper -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Custom JavaScript -->
+   
+  <script src="script_s.js"></script>
+<!-- Code injected by live-server -->
+<script>
+	// <![CDATA[  <-- For SVG support
+	if ('WebSocket' in window) {
+		(function () {
+			function refreshCSS() {
+				var sheets = [].slice.call(document.getElementsByTagName("link"));
+				var head = document.getElementsByTagName("head")[0];
+				for (var i = 0; i < sheets.length; ++i) {
+					var elem = sheets[i];
+					var parent = elem.parentElement || head;
+					parent.removeChild(elem);
+					var rel = elem.rel;
+					if (elem.href && typeof rel != "string" || rel.length == 0 || rel.toLowerCase() == "stylesheet") {
+						var url = elem.href.replace(/(&|\?)_cacheOverride=\d+/, '');
+						elem.href = url + (url.indexOf('?') >= 0 ? '&' : '?') + '_cacheOverride=' + (new Date().valueOf());
+					}
+					parent.appendChild(elem);
+				}
+			}
+			var protocol = window.location.protocol === 'http:' ? 'ws://' : 'wss://';
+			var address = protocol + window.location.host + window.location.pathname + '/ws';
+			var socket = new WebSocket(address);
+			socket.onmessage = function (msg) {
+				if (msg.data == 'reload') window.location.reload();
+				else if (msg.data == 'refreshcss') refreshCSS();
+			};
+			if (sessionStorage && !sessionStorage.getItem('IsThisFirstTime_Log_From_LiveServer')) {
+				console.log('Live reload enabled.');
+				sessionStorage.setItem('IsThisFirstTime_Log_From_LiveServer', true);
+			}
+		})();
+	}
+	else {
+		console.error('Upgrade your browser. This Browser is NOT supported WebSocket for Live-Reloading.');
+	}
+	// ]]>
+</script>
+</body>
+
+</html>

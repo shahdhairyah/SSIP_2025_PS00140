@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Elegant Login & Signup</title>
+  <link rel="stylesheet" href="style_L_S.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/css/intlTelInput.css">
+  <!-- Add meta description for SEO -->
+  <meta name="description" content="Secure login and signup system with email verification">
+  <!-- Add favicon -->
+  <!-- <link rel="icon" type="image/svg+xml" href="/vite.svg"> -->
+  <!-- Preload critical resources -->
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+</head>
+<body>
+  <div class="container">
+    <div class="form-container">
+      <div class="tab-container">
+        <button class="tab-link active" data-tab="login-section">Login</button>
+        <button class="tab-link" data-tab="signup-section">Sign Up</button>
+      </div>
+      
+      <div class="form-wrapper">
+        <!-- Login Form -->
+        <div id="login-section" class="form-section active">
+          <h2>Welcome Back</h2>
+          <form action="login.php" method="POST" id="login-form">
+            <div class="input-container">
+              <label for="login-email">Email</label>
+              <div class="input-wrapper">
+                <span class="icon">📧</span>
+                <input 
+                  type="email" 
+                  id="login-email" 
+                  placeholder="Enter your email" 
+                  name="login-email" 
+                  autocomplete="email"
+                  required
+                >
+              </div>
+              <span class="error-message" id="login-email-error"></span>
+            </div>
+            
+            <div class="input-container">
+              <!-- <label for="login-department">Department</label>
+               <div class="select-wrapper">
+                <select id="login-department" name="login-department" required>
+                  <option value="">--Select Department--</option>
+                  <option value="Skill Development">Skill Development</option>
+                  <option value="Employment Department">Employment Department</option>
+                  <option value="Labour Department">Labour Department</option>
+                </select>
+              </div> -->
+              <span class="error-message" id="login-department-error"></span>
+            </div>
+            
+            <div class="input-container">
+              <label for="login-password">Password</label>
+              <div class="password-wrapper">
+                <span class="icon">🔒</span>
+                <input 
+                  type="password" 
+                  id="login-password" 
+                  placeholder="Enter your password" 
+                  name="login-password" 
+                  autocomplete="current-password"
+                  required
+                >
+                <button type="button" class="toggle-password" data-for="login-password">
+                  <span class="toggle-icon">👁️</span>
+                </button>
+              </div>
+              <span class="error-message" id="login-password-error"></span>
+            </div>
+            
+            <div class="form-footer">
+              <div class="remember-me">
+                <input type="checkbox" id="remember-me">
+                <label for="remember-me">Remember me</label>
+              </div>
+              <a href="forget_password.html" class="forgot-password">Forgot Password?</a>
+            </div>
+            <div>
+              <a href="admin_login.php" class="admin-login">Admin Login</a>
+            </div>
+            <div class="message-container">
+              <div class="error-message" id="login-error"></div>
+              <div class="success-message" id="login-success"></div>
+              <div class="error-message" id="login-message"></div>
+            </div>
+            
+            <button type="submit" class="form-button" onclick="showLoader()">Login</button>
+          </form>
+          <p class="switch-form">Don't have an account? <a href="#" data-switch="signup-section">Create a new account</a></p>
+        </div>
+
+        <!-- Signup Form -->
+        <div id="signup-section" class="form-section">
+          <h2>Create Account</h2>
+          <form action="signup.php" method="POST" id="signup-form">
+            <div class="input-container">
+              <label for="fullname">Full Name</label>
+              <div class="input-wrapper">
+                <span class="icon">👤</span>
+                <input 
+                  type="text" 
+                  id="fullname" 
+                  placeholder="Your Name" 
+                  name="fullname" 
+                  autocomplete="name"
+                  required
+                >
+              </div>
+              <span class="error-message" id="fullname-error"></span>
+            </div>
+            
+            <div class="input-container">
+              <label for="phone">Phone Number</label>
+              <div class="input-wrapper">
+                <span class="icon">📱</span>
+                <input 
+                  type="tel" 
+                  id="phone" 
+                  placeholder="(123) 456-7890" 
+                  name="phone" 
+                  autocomplete="tel"
+                  required
+                >
+              </div>
+              <span class="error-message" id="phone-error"></span>
+            </div>
+            
+            <div class="input-container">
+              <label for="email">Email</label>
+              <div class="input-wrapper">
+                <span class="icon">📧</span>
+                <input 
+                  type="email" 
+                  id="email" 
+                  placeholder="your.email@example.com" 
+                  name="email" 
+                  autocomplete="email"
+                  required
+                >
+              </div>
+              <span class="error-message" id="email-error"></span>
+            </div>
+            
+            <div class="input-container">
+              <label for="department">Department</label>
+              <div class="select-wrapper">
+                <select id="department" name="department" required>
+                  <option value="">--Select Department--</option>
+                  <option value="Skill Development">Skill Development</option>
+                  <option value="Employment Department">Employment Department</option>
+                  <option value="Labour Department">Labour Department</option>
+                </select>
+              </div>
+              <span class="error-message" id="department-error"></span>
+            </div>
+            <input type="hidden" id="temp_pass" name="temp_pass">
+            
+            <div class="input-container">
+              <label for="password">Password</label>
+              <div class="password-wrapper">
+                <span class="icon">🔒</span>
+                <input 
+                  type="password" 
+                  id="password" 
+                  placeholder="Create a strong password" 
+                  name="password" 
+                  autocomplete="new-password"
+                  required
+                >
+                <button type="button" class="toggle-password" data-for="password">
+                  <span class="toggle-icon">👁️</span>
+                </button>
+              </div>
+              <div class="strength-meter">
+                <div class="strength-bar" id="strength-bar"></div>
+              </div>
+              <p id="strength-text" class="strength-text"></p>
+              <span class="error-message" id="password-error"></span>
+            </div>
+            
+            <div class="input-container">
+              <label for="confirm-password">Confirm Password</label>
+              <div class="password-wrapper">
+                <span class="icon">🔒</span>
+                <input 
+                  type="password" 
+                  id="confirm-password" 
+                  placeholder="Re-enter your password" 
+                  name="confirmpassword" 
+                  autocomplete="new-password"
+                  required
+                >
+                <button type="button" class="toggle-password" data-for="confirm-password">
+                  <span class="toggle-icon">👁️</span>
+                </button>
+              </div>
+              <p id="password-match-text" class="match-text"></p>
+              <span class="error-message" id="confirm-password-error"></span>
+            </div>
+            
+            <div class="terms-container">
+              <input type="checkbox" id="terms-agree" required>
+              <label for="terms-agree">I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a></label>
+              <span class="error-message" id="terms-error"></span>
+            </div>
+            
+            <div class="message-container">
+              <div class="error-message" id="signup-error"></div>
+              <div class="success-message" id="signup-success"></div>
+              <div class="error-message" id="signup-message"></div>
+            </div>
+            
+            <button type="submit" class="form-button" onclick="showLoader()">Create Account</button>
+          </form>
+          <p class="switch-form">Already have an account? <a href="#" data-switch="login-section">Login here</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+<!-- Loader -->
+<div class="loader-container" id="loader" style="display: none;">
+  <div class="loader">
+      <div class="dot"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+  </div>
+  <div class="loading-text">Loading, Wait For a Moment...</div>
+</div>
+
+  <!-- Email Verification Popup -->
+  <div id="popup-modal" class="popup">
+    <div class="popup-content">
+      <h2>Email Verification</h2>
+      <p>Please enter the verification code sent to your email</p>
+      
+      <div class="input-container">
+        <input type="hidden" id="popup-email">
+        <label for="popup-token">Verification Code</label>
+        <div class="input-wrapper">
+          <span class="icon">🔑</span>
+          <input 
+            type="text" 
+            id="popup-token" 
+            placeholder="Enter 6-digit code" 
+            maxlength="6" 
+            pattern="[0-9]{6}" 
+            required
+          >
+        </div>
+      </div>
+      
+      <p id="popup-message" class="verification-message"></p>
+      
+      <div class="popup-buttons">
+        <button onclick="verifyToken()" class="verify-button">Verify</button>
+        <button onclick="closePopup()" class="close-button">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/intlTelInput.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/utils.js"></script>
+  <script>
+    console.log("Sending email:", email);
+    console.log("Sending password:", password);
+  </script>
+  <script src="script_L_S.js"></script>
+  <script>
+    // Function to show loader
+    function showLoader() {
+        document.getElementById("loader").style.display = "flex";
+    }
+  
+    // Function to hide loader
+    function hideLoader() {
+        document.getElementById("loader").style.display = "none";
+    }
+    console.log("Sending email:", email);
+    console.log("Sending password:", password);
+
+  </script>
+</body>
+</html>

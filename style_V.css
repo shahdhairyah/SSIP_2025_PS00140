@@ -1,0 +1,71 @@
+/* General Styles */
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+    padding: 20px;
+    background-color: #f8f9fa;
+    color: #333;
+}
+
+h2 {
+    color: #007bff;
+}
+
+p {
+    font-size: 16px;
+    margin: 5px 0;
+}
+
+/* Status Badge Styles */
+.badge {
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 14px;
+    color: #fff;
+}
+
+.bg-success { background-color: #28a745; }
+.bg-warning { background-color: #ffc107; color: #212529; }
+.bg-danger { background-color: #dc3545; }
+.bg-secondary { background-color: #6c757d; }
+
+/* Progress Bar */
+.progress {
+    background-color: #e9ecef;
+    border-radius: 5px;
+    overflow: hidden;
+    height: 10px;
+    width: 200px;
+    margin-top: 5px;
+}
+
+.progress-bar {
+    height: 100%;
+    transition: width 0.5s;
+}
+
+/* Button Styles */
+a {
+    display: inline-block;
+    text-decoration: none;
+    color: #fff;
+    background-color: #007bff;
+    padding: 8px 12px;
+    border-radius: 5px;
+    margin-top: 15px;
+}
+
+a:hover {
+    background-color: #0056b3;
+}
+
+/* Responsive Styles */
+@media (max-width: 600px) {
+    body {
+        padding: 10px;
+    }
+
+    .progress {
+        width: 100%;
+    }
+}
